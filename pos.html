@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>BREWS.CO – POS</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    body { align-items: flex-start; padding: 0; }
+
+    /* ═══════════════════════════════════════════════
+       SETUP SCREEN
+    ═══════════════════════════════════════════════ */
+    #setupScreen { padding: 20px 12px; width: 100%; display: flex; justify-content: center; }
+    #setupScreen .container { max-width: 480px; }
+
+    .setup-note {
+      background: #fdf0e4;
+      border: 1px solid #e8d5c4;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #9a7a5e;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .start-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(145deg, #d4a97c, #7a5c3e);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(122,92,62,0.3);
+      transition: all .2s;
+      letter-spacing: 0.03em;
+    }
+    .start-btn:hover { background: linear-gradient(145deg, #7a5c3e, #5c4631); transform: translateY(-1px); }
+
+    /* ═══════════════════════════════════════════════
+       POS SCREEN
+    ═══════════════════════════════════════════════ */
+    #posScreen { display: none; flex-direction: column; width: 100%; min-height: 100vh; }
+
+    /* ── POS Header ── */
+    .pos-header {
+      background: linear-gradient(135deg, #7a5c3e, #5c4631);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(60,38,20,0.2);
+    }
+
+    .pos-header-left { display: flex; flex-direction: column; }
+    .pos-header-brand { font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: 0.08em; }
+    .pos-header-sub   { font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 1px; }
+
+    .pos-header-right { display: flex; align-items: center; gap: 10px; }
+
+    .shift-total-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 6px 12px;
+      text-align: right;
+    }
+    .shift-total-label { font-size: 0.65rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.08em; display: block; }
+    .shift-total-val   { font-size: 0.95rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+
+    .end-shift-btn {
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.35);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .end-shift-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── POS Body ── */
+    .pos-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 14px;
+      gap: 14px;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ── Drink Buttons ── */
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .drink-btn {
+      position: relative;
+      background: #fffaf5;
+      border: 2px solid #e8d5c4;
+      border-radius: 16px;
+      padding: 14px 8px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .15s ease;
+      box-shadow: 0 2px 6px rgba(122,92,62,0.07);
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .drink-btn:active {
+      transform: scale(0.94);
+      box-shadow: 0 1px 3px rgba(122,92,62,0.1);
+    }
+
+    .drink-btn.has-qty {
+      border-color: #c7a27c;
+      background: #fdf5ec;
+      box-shadow: 0 3px 10px rgba(122,92,62,0.14);
+    }
+
+    .drink-btn-icon  { font-size: 1.6rem; line-height: 1; }
+    .drink-btn-code  { font-size: 0.78rem; font-weight: 800; color: #7a5c3e; letter-spacing: 0.05em; }
+    .drink-btn-name  { font-size: 0.68rem; color: #9a7a5e; text-align: center; line-height: 1.2; }
+    .drink-btn-price { font-size: 0.75rem; font-weight: 700; color: #5c4631; margin-top: 2px; }
+
+    .qty-badge {
+      position: absolute;
+      top: -8px; right: -8px;
+      background: linear-gradient(135deg, #d4a97c, #7a5c3e);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 6px rgba(122,92,62,0.3);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all .18s ease;
+    }
+    .drink-btn.has-qty .qty-badge { opacity: 1; transform: scale(1); }
+
+    /* ── Order Panel ── */
+    .order-panel {
+      background: #fffaf5;
+      border: 1.5px solid #e8d5c4;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(122,92,62,0.08);
+    }
+
+    .order-panel-header {
+      background: #f5ede5;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8d5c4;
+    }
+
+    .order-panel-title { font-size: 0.78rem; font-weight: 700; color: #9a7a5e; letter-spacing: 0.08em; text-transform: uppercase; }
+
+    .clear-order-btn {
+      background: none;
+      border: none;
+      font-size: 0.75rem;
+      color: #c0665a;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: background .15s;
+    }
+    .clear-order-btn:hover { background: #fae0de; }
+
+    .order-items {
+      padding: 10px 14px;
+      min-height: 60px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .empty-order {
+      text-align: center;
+      color: #c4a98a;
+      font-size: 0.82rem;
+      padding: 14px 0;
+    }
+
+    .order-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5ede5;
+    }
+    .order-item:last-child { border-bottom: none; }
+
+    .order-item-name { flex: 1; font-size: 0.88rem; color: #5c4631; font-weight: 500; }
+    .order-item-qty-controls { display: flex; align-items: center; gap: 5px; }
+
+    .qty-btn {
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      border: 1.5px solid #e0c9b8;
+      background: #f5ede5;
+      color: #7a5c3e;
+      font-weight: 800;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .qty-btn:hover { background: #e4d0bf; }
+
+    .order-item-qty { font-size: 0.88rem; font-weight: 700; color: #5c4631; min-width: 22px; text-align: center; }
+    .order-item-total { font-size: 0.88rem; font-weight: 600; color: #7a5c3e; min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .order-footer {
+      padding: 10px 16px 14px;
+      border-top: 1.5px solid #e8d5c4;
+      background: #fdf7f2;
+    }
+
+    .order-subtotal {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #5c4631;
+      margin-bottom: 10px;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(145deg, #d4a97c, #7a5c3e);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(122,92,62,0.25);
+      transition: all .2s;
+      letter-spacing: 0.02em;
+    }
+    .place-order-btn:hover { background: linear-gradient(145deg, #7a5c3e, #5c4631); transform: translateY(-1px); }
+    .place-order-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+    /* ── Orders Log ── */
+    .orders-log { display: flex; flex-direction: column; gap: 8px; padding-bottom: 20px; }
+
+    .orders-log-header {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #9a7a5e;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .orders-count-badge {
+      background: #f0e4d8;
+      color: #7a5c3e;
+      border-radius: 20px;
+      padding: 2px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .order-log-item {
+      background: #fffaf5;
+      border: 1.5px solid #e8d5c4;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(122,92,62,0.06);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .order-log-item:hover { border-color: #d4b89e; box-shadow: 0 3px 8px rgba(122,92,62,0.1); }
+
+    .order-log-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+    }
+
+    .order-log-left { display: flex; flex-direction: column; gap: 2px; }
+    .order-log-num  { font-size: 0.8rem; font-weight: 700; color: #7a5c3e; }
+    .order-log-desc { font-size: 0.75rem; color: #9a7a5e; }
+    .order-log-total { font-size: 0.92rem; font-weight: 700; color: #5c4631; font-variant-numeric: tabular-nums; }
+
+    .order-log-detail {
+      border-top: 1px solid #f0e4d8;
+      padding: 10px 14px;
+      display: none;
+    }
+    .order-log-item.expanded .order-log-detail { display: block; }
+
+    .order-log-detail-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #7a5c3e;
+      padding: 3px 0;
+    }
+
+    .no-orders {
+      text-align: center;
+      color: #c4a98a;
+      font-size: 0.85rem;
+      padding: 16px 0;
+    }
+
+    /* ── Receipt Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(60,38,20,0.45);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .22s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #fffaf5;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 8px 40px rgba(122,92,62,0.25);
+      border: 1px solid #e8d5c4;
+      transform: translateY(16px) scale(0.97);
+      transition: transform .22s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-brand {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #7a5c3e;
+      margin-bottom: 2px;
+    }
+    .modal-subtitle {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #b08060;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .modal-divider {
+      border: none;
+      border-top: 1px dashed #d4b89e;
+      margin: 12px 0;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: #5c4631;
+      padding: 4px 0;
+    }
+    .receipt-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #3d2b1a;
+      padding: 6px 0 0;
+    }
+    .modal-order-num {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #b08060;
+      margin-bottom: 14px;
+    }
+    .modal-close-btn {
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background: linear-gradient(145deg, #d4a97c, #7a5c3e);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .modal-close-btn:hover { background: linear-gradient(145deg, #7a5c3e, #5c4631); }
+
+    /* ── End Shift Modal ── */
+    .end-shift-summary {
+      background: #f5ede5;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 12px 0;
+    }
+    .end-shift-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: #5c4631;
+      padding: 4px 0;
+      border-bottom: 1px solid #e8d5c4;
+    }
+    .end-shift-row:last-child { border-bottom: none; }
+    .end-shift-row.total { font-weight: 700; color: #7a5c3e; font-size: 0.95rem; }
+
+    .end-shift-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .end-shift-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+    .btn-cancel-shift { background: #f0e4d8; color: #7a5c3e; border: 1.5px solid #e0c9b8 !important; }
+    .btn-cancel-shift:hover { background: #e4d0bf; }
+    .btn-confirm-shift { background: linear-gradient(145deg, #d4a97c, #7a5c3e); color: #fff; box-shadow: 0 3px 10px rgba(122,92,62,0.25); }
+    .btn-confirm-shift:hover { background: linear-gradient(145deg, #7a5c3e, #5c4631); transform: translateY(-1px); }
+
+    @media (max-width: 400px) {
+      .drinks-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+      .drink-btn { padding: 11px 6px 10px; border-radius: 12px; }
+      .drink-btn-icon { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════ SETUP SCREEN ══════════════ -->
+  <div id="setupScreen">
+    <div class="container">
+      <div class="brand">BREWS.CO</div>
+      <div class="brand-sub">Point of Sale</div>
+
+      <div class="setup-note">
+        Enter your beginning cup inventory before starting the shift.
+        The POS will track everything automatically.
+      </div>
+
+      <div class="section">
+        <h3>Beginning Cups</h3>
+        <div class="row">
+          <label>Medium</label>
+          <input type="number" id="setupBegM"  placeholder="0" min="0">
+          <input class="placeholder" disabled>
+          <input class="placeholder" disabled>
+        </div>
+        <div class="row">
+          <label>Large</label>
+          <input type="number" id="setupBegL"  placeholder="0" min="0">
+          <input class="placeholder" disabled>
+          <input class="placeholder" disabled>
+        </div>
+        <div class="row">
+          <label>Small</label>
+          <input type="number" id="setupBegS"  placeholder="0" min="0">
+          <input class="placeholder" disabled>
+          <input class="placeholder" disabled>
+        </div>
+        <div class="row">
+          <label>Hot Coffee</label>
+          <input type="number" id="setupBegHC" placeholder="0" min="0">
+          <input class="placeholder" disabled>
+          <input class="placeholder" disabled>
+        </div>
+      </div>
+
+      <button class="start-btn" onclick="startShift()">▶ Start Shift</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ POS SCREEN ══════════════ -->
+  <div id="posScreen">
+
+    <!-- Header -->
+    <div class="pos-header">
+      <div class="pos-header-left">
+        <span class="pos-header-brand">BREWS.CO</span>
+        <span class="pos-header-sub">POS – Active Shift</span>
+      </div>
+      <div class="pos-header-right">
+        <div class="shift-total-badge">
+          <span class="shift-total-label">Shift Total</span>
+          <span class="shift-total-val" id="shiftTotalDisplay">₱0.00</span>
+        </div>
+        <button class="end-shift-btn" onclick="openEndShift()">End Shift ⏹</button>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="pos-body">
+
+      <!-- Drink Buttons -->
+      <div class="drinks-grid" id="drinksGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Current Order -->
+      <div class="order-panel">
+        <div class="order-panel-header">
+          <span class="order-panel-title">Current Order</span>
+          <button class="clear-order-btn" onclick="clearCurrentOrder()">✕ Clear</button>
+        </div>
+        <div class="order-items" id="orderItems">
+          <div class="empty-order">Tap a drink to start an order</div>
+        </div>
+        <div class="order-footer">
+          <div class="order-subtotal">
+            <span>Subtotal</span>
+            <span id="orderSubtotal">₱0.00</span>
+          </div>
+          <button class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()" disabled>
+            Place Order
+          </button>
+        </div>
+      </div>
+
+      <!-- Orders Log -->
+      <div class="orders-log">
+        <div class="orders-log-header">
+          <span>Orders This Shift</span>
+          <span class="orders-count-badge" id="ordersCountBadge">0</span>
+        </div>
+        <div id="ordersLogList">
+          <div class="no-orders">No orders placed yet</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ RECEIPT MODAL ══════════════ -->
+  <div class="modal-overlay" id="receiptModal">
+    <div class="modal">
+      <div class="modal-brand">BREWS.CO</div>
+      <div class="modal-subtitle">Order Receipt</div>
+      <div class="modal-order-num" id="receiptOrderNum"></div>
+      <hr class="modal-divider">
+      <div id="receiptItems"></div>
+      <hr class="modal-divider">
+      <div class="receipt-total" id="receiptTotal"></div>
+      <button class="modal-close-btn" onclick="closeReceiptModal()">Done</button>
+    </div>
+  </div>
+
+  <!-- ══════════════ END SHIFT MODAL ══════════════ -->
+  <div class="modal-overlay" id="endShiftModal">
+    <div class="modal">
+      <div class="modal-brand">End Shift</div>
+      <div class="modal-subtitle">Shift Summary</div>
+      <div class="end-shift-summary" id="endShiftSummary"></div>
+      <div class="end-shift-actions">
+        <button class="btn-cancel-shift" onclick="closeEndShift()">Cancel</button>
+        <button class="btn-confirm-shift" onclick="confirmEndShift()">Confirm & Continue →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Drink Catalogue ──────────────────────────────────────────────────────
+    const DRINKS = [
+      { code: "M",  name: "Milktea M",      icon: "🧋", price: 29, cupType: "M" },
+      { code: "L",  name: "Milktea L",      icon: "🧋", price: 39, cupType: "L" },
+      { code: "S",  name: "Milktea S",      icon: "🧋", price: 25, cupType: "S" },
+      { code: "MC", name: "Iced Coffee M",  icon: "☕", price: 35, cupType: "M" },
+      { code: "LC", name: "Iced Coffee L",  icon: "☕", price: 45, cupType: "L" },
+      { code: "HC", name: "Hot Coffee",     icon: "☕", price: 45, cupType: "HC" },
+    ];
+
+    const POS_KEY   = "brewsPOSState";
+    const SHIFT_KEY = "brewsShiftResult";
+
+    // ── State ────────────────────────────────────────────────────────────────
+    let state = {
+      begM: 0, begL: 0, begS: 0, begHC: 0,
+      currentOrder: {},  // { code: qty }
+      orders: [],        // [{ id, items: [{code, qty, price}], total, time }]
+      shiftTotal: 0
+    };
+
+    // ── Persistence ──────────────────────────────────────────────────────────
+    function saveState() {
+      localStorage.setItem(POS_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(POS_KEY);
+        if (raw) state = JSON.parse(raw);
+      } catch {}
+    }
+
+    function clearPOSState() {
+      localStorage.removeItem(POS_KEY);
+    }
+
+    // ── Format ───────────────────────────────────────────────────────────────
+    function fmt(val) {
+      return "₱" + Number(val).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function timeNow() {
+      return new Date().toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" });
+    }
+
+    // ── Setup → Start Shift ──────────────────────────────────────────────────
+    function startShift() {
+      const begM  = +document.getElementById("setupBegM").value  || 0;
+      const begL  = +document.getElementById("setupBegL").value  || 0;
+      const begS  = +document.getElementById("setupBegS").value  || 0;
+      const begHC = +document.getElementById("setupBegHC").value || 0;
+
+      state.begM  = begM;
+      state.begL  = begL;
+      state.begS  = begS;
+      state.begHC = begHC;
+      state.currentOrder = {};
+      state.orders = [];
+      state.shiftTotal = 0;
+
+      saveState();
+      showPOS();
+    }
+
+    // ── Screen Switch ────────────────────────────────────────────────────────
+    function showSetup() {
+      document.getElementById("setupScreen").style.display = "flex";
+      document.getElementById("posScreen").style.display   = "none";
+    }
+
+    function showPOS() {
+      document.getElementById("setupScreen").style.display = "none";
+      document.getElementById("posScreen").style.display   = "flex";
+      renderDrinkButtons();
+      renderCurrentOrder();
+      renderOrdersLog();
+      updateShiftTotal();
+    }
+
+    // ── Drink Buttons ────────────────────────────────────────────────────────
+    function renderDrinkButtons() {
+      const grid = document.getElementById("drinksGrid");
+      grid.innerHTML = "";
+      DRINKS.forEach(d => {
+        const qty = state.currentOrder[d.code] || 0;
+        const btn = document.createElement("button");
+        btn.className = "drink-btn" + (qty > 0 ? " has-qty" : "");
+        btn.innerHTML = `
+          <span class="qty-badge">${qty}</span>
+          <span class="drink-btn-icon">${d.icon}</span>
+          <span class="drink-btn-code">${d.code}</span>
+          <span class="drink-btn-name">${d.name}</span>
+          <span class="drink-btn-price">${fmt(d.price)}</span>
+        `;
+        btn.addEventListener("click", () => addToOrder(d.code));
+        grid.appendChild(btn);
+      });
+    }
+
+    // ── Current Order ────────────────────────────────────────────────────────
+    function addToOrder(code) {
+      state.currentOrder[code] = (state.currentOrder[code] || 0) + 1;
+      saveState();
+      renderDrinkButtons();
+      renderCurrentOrder();
+    }
+
+    function setQty(code, qty) {
+      if (qty <= 0) { delete state.currentOrder[code]; }
+      else { state.currentOrder[code] = qty; }
+      saveState();
+      renderDrinkButtons();
+      renderCurrentOrder();
+    }
+
+    function clearCurrentOrder() {
+      state.currentOrder = {};
+      saveState();
+      renderDrinkButtons();
+      renderCurrentOrder();
+    }
+
+    function getOrderTotal() {
+      return Object.entries(state.currentOrder).reduce((sum, [code, qty]) => {
+        const drink = DRINKS.find(d => d.code === code);
+        return sum + (drink ? drink.price * qty : 0);
+      }, 0);
+    }
+
+    function renderCurrentOrder() {
+      const container = document.getElementById("orderItems");
+      const entries   = Object.entries(state.currentOrder).filter(([,q]) => q > 0);
+      const total     = getOrderTotal();
+
+      document.getElementById("orderSubtotal").textContent = fmt(total);
+      document.getElementById("placeOrderBtn").disabled    = entries.length === 0;
+
+      if (!entries.length) {
+        container.innerHTML = `<div class="empty-order">Tap a drink to start an order</div>`;
+        return;
+      }
+
+      container.innerHTML = entries.map(([code, qty]) => {
+        const drink    = DRINKS.find(d => d.code === code);
+        const itemTotal = drink.price * qty;
+        return `<div class="order-item">
+          <span class="order-item-name">${drink.name} (${code})</span>
+          <div class="order-item-qty-controls">
+            <button class="qty-btn" onclick="setQty('${code}', ${qty - 1})">−</button>
+            <span class="order-item-qty">${qty}</span>
+            <button class="qty-btn" onclick="setQty('${code}', ${qty + 1})">+</button>
+          </div>
+          <span class="order-item-total">${fmt(itemTotal)}</span>
+        </div>`;
+      }).join("");
+    }
+
+    // ── Place Order ──────────────────────────────────────────────────────────
+    function placeOrder() {
+      const entries = Object.entries(state.currentOrder).filter(([,q]) => q > 0);
+      if (!entries.length) return;
+
+      const items = entries.map(([code, qty]) => {
+        const drink = DRINKS.find(d => d.code === code);
+        return { code, qty, name: drink.name, price: drink.price, total: drink.price * qty };
+      });
+
+      const total = items.reduce((s, i) => s + i.total, 0);
+      const order = {
+        id: state.orders.length + 1,
+        items,
+        total,
+        time: timeNow()
+      };
+
+      state.orders.push(order);
+      state.shiftTotal += total;
+      state.currentOrder = {};
+      saveState();
+
+      renderDrinkButtons();
+      renderCurrentOrder();
+      renderOrdersLog();
+      updateShiftTotal();
+      showReceipt(order);
+    }
+
+    // ── Orders Log ───────────────────────────────────────────────────────────
+    function renderOrdersLog() {
+      const list = document.getElementById("ordersLogList");
+      const badge = document.getElementById("ordersCountBadge");
+      badge.textContent = state.orders.length;
+
+      if (!state.orders.length) {
+        list.innerHTML = `<div class="no-orders">No orders placed yet</div>`;
+        return;
+      }
+
+      // Newest first
+      list.innerHTML = [...state.orders].reverse().map(order => {
+        const desc = order.items.map(i => `${i.qty}×${i.code}`).join(", ");
+        const details = order.items.map(i =>
+          `<div class="order-log-detail-row">
+            <span>${i.qty}× ${i.name} (${i.code})</span>
+            <span>${fmt(i.total)}</span>
+          </div>`
+        ).join("") +
+        `<div class="order-log-detail-row" style="font-weight:700; color:#7a5c3e; border-top:1px solid #e8d5c4; margin-top:6px; padding-top:6px;">
+          <span>Total</span><span>${fmt(order.total)}</span>
+        </div>`;
+
+        return `<div class="order-log-item" onclick="this.classList.toggle('expanded')">
+          <div class="order-log-summary">
+            <div class="order-log-left">
+              <span class="order-log-num">Order #${order.id} · ${order.time}</span>
+              <span class="order-log-desc">${desc}</span>
+            </div>
+            <span class="order-log-total">${fmt(order.total)}</span>
+          </div>
+          <div class="order-log-detail">${details}</div>
+        </div>`;
+      }).join("");
+    }
+
+    // ── Shift Total ───────────────────────────────────────────────────────────
+    function updateShiftTotal() {
+      document.getElementById("shiftTotalDisplay").textContent = fmt(state.shiftTotal);
+    }
+
+    // ── Receipt Modal ─────────────────────────────────────────────────────────
+    function showReceipt(order) {
+      document.getElementById("receiptOrderNum").textContent = `Order #${order.id} · ${order.time}`;
+      document.getElementById("receiptItems").innerHTML = order.items.map(i =>
+        `<div class="receipt-row">
+          <span>${i.qty}× ${i.name}</span>
+          <span>${fmt(i.total)}</span>
+        </div>`
+      ).join("");
+      document.getElementById("receiptTotal").innerHTML =
+        `<span>Total</span><span>${fmt(order.total)}</span>`;
+      document.getElementById("receiptModal").classList.add("open");
+    }
+
+    function closeReceiptModal() {
+      document.getElementById("receiptModal").classList.remove("open");
+    }
+
+    // ── End Shift ─────────────────────────────────────────────────────────────
+    function computeShiftTotals() {
+      const totals = { M: 0, L: 0, S: 0, MC: 0, LC: 0, HC: 0 };
+      state.orders.forEach(order => {
+        order.items.forEach(item => { totals[item.code] = (totals[item.code] || 0) + item.qty; });
+      });
+      return totals;
+    }
+
+    function openEndShift() {
+      const t = computeShiftTotals();
+
+      // End cups = beg - total cups consumed per type
+      // M cups are used by both M milktea and MC iced coffee
+      // L cups are used by both L milktea and LC iced coffee
+      const endM  = state.begM  - t.M - t.MC;
+      const endL  = state.begL  - t.L - t.LC;
+      const endS  = state.begS  - t.S;
+      const endHC = state.begHC - t.HC;
+
+      const summaryEl = document.getElementById("endShiftSummary");
+      summaryEl.innerHTML = `
+        <div class="end-shift-row"><span>Orders Placed</span><span>${state.orders.length}</span></div>
+        <div class="end-shift-row"><span>Shift Revenue</span><span>${fmt(state.shiftTotal)}</span></div>
+        <div class="end-shift-row" style="margin-top:8px; padding-top:8px; border-top:1.5px solid #d4b89e;">
+          <span style="font-weight:600; color:#7a5c3e;">Cup Counts (auto-filled)</span><span></span>
+        </div>
+        <div class="end-shift-row"><span>Medium: ${state.begM} → ${endM}</span><span>MC Tally: ${t.MC}</span></div>
+        <div class="end-shift-row"><span>Large: ${state.begL} → ${endL}</span><span>LC Tally: ${t.LC}</span></div>
+        <div class="end-shift-row"><span>Small: ${state.begS} → ${endS}</span><span></span></div>
+        <div class="end-shift-row"><span>Hot Coffee: ${state.begHC} → ${endHC}</span><span></span></div>
+      `;
+
+      document.getElementById("endShiftModal").classList.add("open");
+    }
+
+    function closeEndShift() {
+      document.getElementById("endShiftModal").classList.remove("open");
+    }
+
+    function confirmEndShift() {
+      const t     = computeShiftTotals();
+      const endM  = state.begM  - t.M - t.MC;
+      const endL  = state.begL  - t.L - t.LC;
+      const endS  = state.begS  - t.S;
+      const endHC = state.begHC - t.HC;
+
+      // Save shift result for inventory page to pick up
+      localStorage.setItem(SHIFT_KEY, JSON.stringify({
+        begM:  state.begM,  endM,
+        begL:  state.begL,  endL,
+        begS:  state.begS,  endS,
+        begHC: state.begHC, endHC,
+        tallyMC: t.MC,
+        tallyLC: t.LC
+      }));
+
+      clearPOSState();
+      window.location.href = "index.html";
+    }
+
+    // ── Key shortcuts ────────────────────────────────────────────────────────
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        closeReceiptModal();
+        closeEndShift();
+      }
+    });
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    loadState();
+    if (state.orders.length > 0 || Object.keys(state.currentOrder).length > 0) {
+      // Resume an in-progress shift
+      showPOS();
+    } else {
+      showSetup();
+    }
+  </script>
+</body>
+</html>
