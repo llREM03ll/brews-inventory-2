@@ -7,35 +7,41 @@
 const SHIFT_KEY = "brewsShiftResult";
 
 (function init() {
-  // Check if we just came from a POS End Shift
   const shiftRaw = localStorage.getItem(SHIFT_KEY);
+
   if (shiftRaw) {
     try {
       const s = JSON.parse(shiftRaw);
-      // Auto-fill all cup fields from shift data
-      const fill = (id, val) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
+      const fields = {
+        beginM: s.begM, endM: s.endM, tallyMC: s.tallyMC,
+        beginL: s.begL, endL: s.endL, tallyLC: s.tallyLC,
+        beginS: s.begS, endS: s.endS,
+        beginHC: s.begHC, endHC: s.endHC,
       };
-      fill("beginM",  s.begM);
-      fill("endM",    s.endM);
-      fill("tallyMC", s.tallyMC);
-      fill("beginL",  s.begL);
-      fill("endL",    s.endL);
-      fill("tallyLC", s.tallyLC);
-      fill("beginS",  s.begS);
-      fill("endS",    s.endS);
-      fill("beginHC", s.begHC);
-      fill("endHC",   s.endHC);
 
-      localStorage.removeItem(SHIFT_KEY); // consume it
+      // Animate each field filling in with a stagger
+      let delay = 0;
+      Object.entries(fields).forEach(([id, val]) => {
+        setTimeout(() => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.value = val;
+          el.style.transition = "background .4s, box-shadow .4s";
+          el.style.background = "#fdf0d8";
+          el.style.boxShadow  = "0 0 0 3px rgba(199,162,124,0.3)";
+          setTimeout(() => {
+            el.style.background = "";
+            el.style.boxShadow  = "";
+          }, 1000);
+        }, delay);
+        delay += 40;
+      });
+
+      localStorage.removeItem(SHIFT_KEY);
       saveInputs();
-
-      // Show a banner to let the user know fields were auto-filled
       showShiftBanner();
     } catch {}
   } else {
-    // No shift data — restore previously saved form inputs
     const saved = restoreInputs();
     if (saved?.expenses?.length) {
       document.getElementById("expensesContainer").innerHTML = "";
@@ -46,34 +52,31 @@ const SHIFT_KEY = "brewsShiftResult";
   attachInputListeners();
 })();
 
-/**
- * Shows a temporary banner at the top of the page confirming
- * that the shift data was auto-filled.
- */
 function showShiftBanner() {
   const banner = document.createElement("div");
   banner.style.cssText = `
     background: linear-gradient(135deg, #d4a97c, #7a5c3e);
-    color: #fff;
-    text-align: center;
-    padding: 10px 16px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    border-radius: 12px;
-    margin-bottom: 16px;
+    color: #fff; text-align: center; padding: 10px 16px;
+    font-size: 0.84rem; font-weight: 600; letter-spacing: 0.02em;
+    border-radius: 12px; margin-bottom: 16px;
     box-shadow: 0 3px 10px rgba(122,92,62,0.2);
-    animation: fadeIn .4s ease;
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity .35s ease, transform .35s ease;
   `;
-  banner.textContent = "✓ Shift data auto-filled from POS. Review and compute when ready.";
+  banner.textContent = "✓ Shift data auto-filled — review and compute when ready.";
 
-  const container = document.querySelector(".container");
+  const container    = document.querySelector(".container");
   const firstSection = container.querySelector(".section");
   container.insertBefore(banner, firstSection);
 
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    banner.style.opacity   = "1";
+    banner.style.transform = "translateY(0)";
+  }));
+
   setTimeout(() => {
-    banner.style.transition = "opacity .5s";
-    banner.style.opacity = "0";
-    setTimeout(() => banner.remove(), 500);
-  }, 4000);
+    banner.style.opacity   = "0";
+    banner.style.transform = "translateY(-6px)";
+    setTimeout(() => banner.remove(), 400);
+  }, 4500);
 }

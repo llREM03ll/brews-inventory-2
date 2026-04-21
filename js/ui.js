@@ -17,6 +17,14 @@ function formatMoney(value) {
   });
 }
 
+/** Wraps a cell value in a red warning span if negative */
+function warnIfNeg(val, display) {
+  if (Number(val) < 0) {
+    return `<span style="color:#c0665a;font-weight:700" title="Negative — check your inputs">${display} ⚠</span>`;
+  }
+  return display;
+}
+
 function getExpensesFromUI() {
   const rows = document.querySelectorAll("#expensesContainer .expense-row");
   const list = [];
@@ -72,10 +80,10 @@ function calculate() {
     { item: system.S,  beg: v("beginS"),  end: v("endS")  },
   ];
 
-  const dash        = val => (val === null ? "—" : val);
-  const today       = new Date().toISOString().split("T")[0];
+  const dash = val => (val === null ? "—" : val);
+  const today = new Date().toISOString().split("T")[0];
   const existingDate = document.getElementById("resultDate")?.value || today;
-  lastRenderDate    = existingDate;
+  lastRenderDate = existingDate;
 
   let html = `
     <div style="display:flex; justify-content:space-between; align-items:center;
@@ -89,20 +97,29 @@ function calculate() {
       <tr><th>Item</th><th>Beg</th><th>Cups</th><th>Price</th><th>End</th><th>Amount</th></tr>
   `;
 
+  let hasNegative = false;
   orderedRows.forEach(({ item, beg, end }) => {
-    if (item.usedCups > 0) {
+    if (item.usedCups !== 0 || (beg && end !== null)) {
+      if (item.usedCups < 0) hasNegative = true;
       html += `<tr>
         <td>${item.name}</td>
         <td>${dash(beg)}</td>
-        <td>${item.usedCups}</td>
+        <td>${warnIfNeg(item.usedCups, item.usedCups)}</td>
         <td>${formatMoney(item.price)}</td>
         <td>${dash(end)}</td>
-        <td>${formatMoney(item.total)}</td>
+        <td>${warnIfNeg(item.total, formatMoney(item.total))}</td>
       </tr>`;
     }
   });
 
-  html += `<tr class="totals"><td colspan="5">Total Cup Sales</td><td>${formatMoney(totalSales)}</td></tr></table>`;
+  html += `<tr class="totals"><td colspan="5">Total Cup Sales</td><td>${warnIfNeg(totalSales, formatMoney(totalSales))}</td></tr></table>`;
+
+  if (hasNegative) {
+    html += `<div style="background:#fff4f0;border:1px solid #f0d5c8;border-radius:10px;
+                          padding:9px 13px;margin-top:10px;font-size:0.82rem;color:#b05040;line-height:1.5;">
+      ⚠ One or more cup counts are negative. Please check your beginning / ending values.
+    </div>`;
+  }
 
   const totalExpenses = system.expenses + salary;
   html += `<table class="summary">
@@ -156,7 +173,7 @@ function saveCurrentResults() {
   if (btn) {
     btn.disabled      = true;
     btn.textContent   = "Saved ✓";
-    btn.style.opacity = "0.7";
+    btn.style.opacity = "0.65";
     btn.style.cursor  = "default";
   }
 }
@@ -177,9 +194,6 @@ function clearAll() {
 
 // ── Internal render helper ────────────────────────────────────────────────────
 
-/**
- * Injects receipt HTML into #results with Save + History buttons below.
- */
 function renderResults(contentHTML) {
   const res = document.getElementById("results");
   res.innerHTML = contentHTML + `
