@@ -237,6 +237,42 @@
     .paid-online-btn.active { background: #e6f0fa; border-color: #90b8e0; color: #2a5a9a; }
     .paid-online-btn:active { transform: scale(0.98); }
     .paid-online-btn.small { width: auto; padding: 4px 10px; font-size: 0.7rem; }
+    .void-order-btn {
+      background: #fbeaea; border: 1.5px solid #e0a8a8; border-radius: var(--radius-md);
+      padding: 4px 10px; font-size: 0.7rem; font-weight: 700; color: #a03030;
+      cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .void-order-btn:active { transform: scale(0.95); background: #f5d5d5; }
+
+    /* ── Best Sellers modal ── */
+    .bs-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+    .bs-tab {
+      flex: 1; background: var(--parchment); border: 1.5px solid var(--latte); border-radius: var(--radius-md);
+      padding: 8px; font-size: 0.8rem; font-weight: 700; color: var(--bark);
+      cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .bs-tab.active { background: var(--grad-cta); color: #fff; border-color: transparent; }
+    .bs-row {
+      display: flex; align-items: center; gap: 10px; padding: 9px 4px;
+      border-bottom: 1px solid rgba(226,201,168,0.4);
+    }
+    .bs-rank {
+      width: 22px; text-align: center; font-weight: 800; font-size: 0.82rem; color: var(--mochaccino); flex-shrink: 0;
+    }
+    .bs-row:nth-child(-n+3) .bs-rank { color: var(--caramel); }
+    .bs-info { flex: 1; min-width: 0; }
+    .bs-name { font-size: 0.86rem; font-weight: 700; color: var(--bark); }
+    .bs-flavor { font-size: 0.72rem; color: var(--dust); }
+    .bs-stats { text-align: right; flex-shrink: 0; }
+    .bs-qty { font-size: 0.86rem; font-weight: 800; color: var(--mahogany); }
+    .bs-revenue { font-size: 0.7rem; color: var(--dust); }
+    .bs-empty { text-align: center; padding: 30px 10px; color: var(--dust); font-size: 0.86rem; }
+    .bs-reset-btn {
+      display: block; width: 100%; margin-top: 12px; padding: 10px; border: 1.5px dashed #e0a8a8;
+      border-radius: var(--radius-lg); font-weight: 700; font-size: 0.8rem; background: transparent;
+      color: #a03030; letter-spacing: 0.02em;
+    }
 
     /* ── Auto-synced expense row (Paid Online / GCash) ── */
     .expense-row.auto-expense input {
@@ -374,16 +410,22 @@
     .flavor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
     .flavor-btn {
       background: var(--pearl); border: 1.5px solid var(--latte); border-radius: var(--radius-md);
-      padding: 9px 6px; font-size: 0.76rem; font-weight: 600; color: var(--roast);
+      font-size: 0.76rem; font-weight: 600; color: var(--roast);
       text-align: center; cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif;
-      transition: all .14s; line-height: 1.3;
+      transition: all .14s; line-height: 1.25;
       -webkit-tap-highlight-color: transparent;
+      aspect-ratio: 3 / 4; display: flex; align-items: center; justify-content: center;
+      padding: 6px 5px; overflow: hidden;
+    }
+    .flavor-btn-label {
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+      overflow: hidden; word-break: break-word;
     }
     .flavor-btn:hover  { background: var(--parchment); border-color: #c7a27c; }
     .flavor-btn:active { transform: scale(0.93); }
     .flavor-btn.no-flavor {
       background: #f0e4d8; color: var(--bark); font-style: italic;
-      grid-column: 1 / -1; padding: 8px;
+      grid-column: 1 / -1; aspect-ratio: auto; padding: 10px;
     }
     .flavor-btn.selected {
       background: #fdf0e0; border-color: #c7a27c; color: var(--roast);
@@ -393,6 +435,24 @@
       color: #fff; font-size: 0.65rem; font-weight: 800; font-style: normal;
       border-radius: var(--radius-md); padding: 1px 6px; margin-left: 4px; vertical-align: middle;
     }
+    .flavor-search-wrap { padding: 8px 18px 0; flex-shrink: 0; }
+    .flavor-search-input {
+      width: 100%; box-sizing: border-box; background: var(--pearl); border: 1.5px solid var(--latte);
+      border-radius: var(--radius-md); padding: 9px 12px; font-size: 0.86rem; color: var(--roast);
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .flavor-search-input:focus { outline: none; border-color: #c7a27c; }
+    .flavor-empty-msg { text-align: center; color: var(--dust); font-size: 0.82rem; padding: 24px 10px; grid-column: 1 / -1; }
+    .flavor-modal-footer {
+      flex-shrink: 0; padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--latte); background: var(--pearl);
+    }
+    .flavor-modal-done-btn {
+      display: block; width: 100%; padding: 13px; border: none; border-radius: var(--radius-lg);
+      background: var(--grad-cta); color: #fff; font-weight: 700; font-size: 0.92rem;
+      font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
+    }
+    .flavor-modal-done-btn:active { transform: scale(0.97); }
 
     /* ═══════════════════════ RECEIPT MODAL ═══════════════════════ */
     .receipt-modal .modal {
@@ -723,6 +783,7 @@
         <span class="header-stat-label">Cup Sales</span>
         <span class="header-stat-val" id="shiftTotalDisplay">₱0.00</span>
       </div>
+      <button class="flavor-settings-btn" onclick="openBestSellers()">🏆 Best Sellers</button>
       <button class="flavor-settings-btn" onclick="openFlavorSettings()">⚙ Flavors</button>
     </div>
     <!-- Row 3: Single adaptive progress bar (to-quota → bonus mode) -->
@@ -852,11 +913,19 @@
       </div>
       <button class="modal-cancel-btn" onclick="closeFlavorModal()">Done</button>
     </div>
+    <div class="flavor-search-wrap">
+      <input type="text" class="flavor-search-input" id="flavorSearchInput"
+        placeholder="Search flavor…" oninput="filterFlavorGrid(this.value)">
+    </div>
     <div class="flavor-scroll">
       <div class="flavor-grid" id="flavorGrid"></div>
     </div>
+    <div class="flavor-modal-footer">
+      <button class="flavor-modal-done-btn" onclick="closeFlavorModal()">Done</button>
+    </div>
   </div>
 </div>
+
 
 <!-- ═══════════ ITEM ADD-ON MODAL (bottom sheet) ═══════════ -->
 <div class="modal-overlay" id="itemAddonModal" onclick="handleItemAddonOverlay(event)">
@@ -939,6 +1008,26 @@
 </div>
 
 <script src="js/settings.js"></script>
+
+<!-- ═══════════ BEST SELLERS MODAL ═══════════ -->
+<div class="modal-overlay centered" id="bestSellersModal" onclick="handleBestSellersOverlay(event)">
+  <div class="modal" style="max-width:480px;padding:20px;border-radius:18px;max-height:85vh;overflow-y:auto;">
+    <div class="modal-header-row" style="margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid var(--latte);">
+      <div>
+        <div class="modal-title">🏆 Best Sellers</div>
+        <div class="modal-sub">Ranked by cups sold</div>
+      </div>
+      <button class="modal-cancel-btn" onclick="closeBestSellers()">Done</button>
+    </div>
+    <div class="bs-tabs">
+      <button class="bs-tab active" id="bsTabShift" onclick="switchBestSellersTab('shift')">This Shift</button>
+      <button class="bs-tab" id="bsTabAll" onclick="switchBestSellersTab('all')">All-Time</button>
+    </div>
+    <div id="bestSellersBody"></div>
+    <button class="bs-reset-btn" id="bsResetBtn" onclick="resetSalesTally()" style="display:none;">Reset all-time stats</button>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="console.warn('Firebase CDN unavailable')"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" onerror="console.warn('Firebase CDN unavailable')"></script>
 <script>
@@ -1021,7 +1110,8 @@ function renderFlavorSettings() {
       ☕ Same-named flavors in Milk Tea, Iced Coffee & Hot Coffee share one container — toggling one marks it out across all three. Fruit Tea has separate containers.
     </div>` +
   Object.entries(FLAVORS).map(([cat, flavors]) => {
-    const pills = flavors.map(f => {
+    const sorted = [...flavors].sort((a,b) => a.localeCompare(b));
+    const pills = sorted.map(f => {
       const oos = isFlavorOOS(cat, f);
       return `<button class="fsettings-pill${oos?" oos":""}"
         onclick="toggleFlavorOOS('${cat}','${f.replace(/'/g,"\\'")}');renderFlavorSettings();">
@@ -1120,6 +1210,105 @@ function loadState() {
 function clearPOSState() {
   localStorage.removeItem(POS_KEY);
   localStorage.removeItem(SHIFT_ACTIVE_KEY);
+}
+
+// ════════════════════════════════════════════════════
+//  SALES TALLY — persistent, all-time best-seller tracking
+//  (separate from the shift-scoped order log; never reset by End Shift)
+// ════════════════════════════════════════════════════
+const SALES_TALLY_KEY = "brewsSalesTally";
+
+function getSalesTally() {
+  try { return JSON.parse(localStorage.getItem(SALES_TALLY_KEY)) || {}; } catch { return {}; }
+}
+function saveSalesTally(t) { localStorage.setItem(SALES_TALLY_KEY, JSON.stringify(t)); }
+
+// qtyDelta is a raw cup count (+/-), applied against one cart/order item.
+function bumpSalesTallyDelta(item, qtyDelta) {
+  if (!qtyDelta) return;
+  const tally = getSalesTally();
+  const key = item.code + "|" + (item.flavor || "");
+  if (!tally[key]) tally[key] = { name: item.name, flavor: item.flavor || "", qty: 0, revenue: 0 };
+  const unitRevenue = item.unitPrice + getItemAddonTotal(item); // per-cup, incl. its own add-ons
+  tally[key].qty     += qtyDelta;
+  tally[key].revenue += unitRevenue * qtyDelta;
+  if (tally[key].qty <= 0) delete tally[key];
+  saveSalesTally(tally);
+}
+
+// Applies a whole order's items at once (sign = +1 to add, -1 to reverse/void/undo).
+function bumpSalesTally(items, sign) {
+  (items || []).forEach(it => bumpSalesTallyDelta(it, sign * it.qty));
+}
+
+function resetSalesTally() {
+  if (!confirm("Reset all-time best-seller stats? This can't be undone.")) return;
+  localStorage.removeItem(SALES_TALLY_KEY);
+  renderBestSellers();
+}
+
+let bestSellersTab = "shift";
+
+function openBestSellers() {
+  bestSellersTab = "shift";
+  document.getElementById("bsTabShift").classList.add("active");
+  document.getElementById("bsTabAll").classList.remove("active");
+  document.getElementById("bsResetBtn").style.display = "none";
+  renderBestSellers();
+  document.getElementById("bestSellersModal").classList.add("open");
+}
+function closeBestSellers() {
+  document.getElementById("bestSellersModal").classList.remove("open");
+}
+function handleBestSellersOverlay(e) {
+  if (e.target === document.getElementById("bestSellersModal")) closeBestSellers();
+}
+function switchBestSellersTab(tab) {
+  bestSellersTab = tab;
+  document.getElementById("bsTabShift").classList.toggle("active", tab==="shift");
+  document.getElementById("bsTabAll").classList.toggle("active", tab==="all");
+  document.getElementById("bsResetBtn").style.display = tab==="all" ? "block" : "none";
+  renderBestSellers();
+}
+
+function renderBestSellers() {
+  const body = document.getElementById("bestSellersBody");
+  let rows;
+
+  if (bestSellersTab === "shift") {
+    // Build from the current live shift's orders — no extra storage needed.
+    const map = {};
+    state.orders.forEach(o => o.items.forEach(it => {
+      const key = it.code + "|" + (it.flavor || "");
+      if (!map[key]) map[key] = { name: it.name, flavor: it.flavor || "", qty: 0, revenue: 0 };
+      map[key].qty     += it.qty;
+      map[key].revenue += (it.unitPrice + getItemAddonTotal(it)) * it.qty;
+    }));
+    rows = Object.values(map);
+  } else {
+    rows = Object.values(getSalesTally());
+  }
+
+  rows.sort((a,b) => b.qty - a.qty);
+
+  if (!rows.length) {
+    body.innerHTML = `<div class="bs-empty">No sales yet${bestSellersTab==="shift" ? " this shift" : ""}.</div>`;
+    return;
+  }
+
+  body.innerHTML = rows.map((r,i) => `
+    <div class="bs-row">
+      <span class="bs-rank">${i+1}</span>
+      <div class="bs-info">
+        <div class="bs-name">${r.name}</div>
+        ${r.flavor ? `<div class="bs-flavor">${r.flavor}</div>` : ""}
+      </div>
+      <div class="bs-stats">
+        <div class="bs-qty">${r.qty} cup${r.qty===1?"":"s"}</div>
+        <div class="bs-revenue">${fmt(r.revenue)}</div>
+      </div>
+    </div>
+  `).join("");
 }
 
 // ════════════════════════════════════════════════════
@@ -1287,6 +1476,7 @@ function showPOS() {
   attachSwipeToDismiss("receiptModal",        closeReceiptModal);
   attachSwipeToDismiss("endShiftModal",       closeEndShift);
   attachSwipeToDismiss("flavorSettingsModal", closeFlavorSettings);
+  attachSwipeToDismiss("bestSellersModal",    closeBestSellers);
 }
 
 function resumeShift() {
@@ -1353,6 +1543,8 @@ function renderDrinkButtons() {
 function openFlavorModal(drink) {
   pendingDrink = drink;
   document.getElementById("flavorModal").classList.add("open");
+  const search = document.getElementById("flavorSearchInput");
+  search.value = "";
   refreshFlavorGrid(drink);
 }
 
@@ -1362,7 +1554,7 @@ function refreshFlavorGrid(drink) {
     fmt(drink.price) + " per cup  ·  tap to add  ·  hold 2s to close";
 
   const cat     = DRINK_FLAVOR_CAT[drink.code] || "milktea";
-  const flavors = FLAVORS[cat] || [];
+  const flavors = [...(FLAVORS[cat] || [])].sort((a,b) => a.localeCompare(b));
   const grid    = document.getElementById("flavorGrid");
   grid.innerHTML = "";
 
@@ -1383,7 +1575,7 @@ function refreshFlavorGrid(drink) {
     btn.addEventListener("touchcancel", cancel);
   }
 
-  // No flavor option
+  // No flavor option (always visible, exempt from search filtering)
   const noCount  = countInOrder("");
   const noFlavor = document.createElement("button");
   noFlavor.className = "flavor-btn no-flavor";
@@ -1400,19 +1592,44 @@ function refreshFlavorGrid(drink) {
     const oos    = isFlavorOOS(cat, f);
     const btn    = document.createElement("button");
     btn.className = "flavor-btn" + (count > 0 ? " selected" : "") + (oos ? " oos-flavor" : "");
+    btn.dataset.name = f.toLowerCase();
     if (oos) {
-      btn.style.cssText = "opacity:.45;text-decoration:line-through;cursor:not-allowed;";
+      btn.style.opacity = ".45"; btn.style.textDecoration = "line-through"; btn.style.cursor = "not-allowed";
       btn.disabled = true;
     }
     btn.innerHTML = count > 0
-      ? `${f} <span class="flavor-count">${count}</span>`
-      : f;
+      ? `<span class="flavor-btn-label">${f}</span> <span class="flavor-count">${count}</span>`
+      : `<span class="flavor-btn-label">${f}</span>`;
     if (!oos) {
       btn.addEventListener("click", () => addItemToOrder(drink, f));
       attachHold(btn, () => { addItemToOrder(drink, f); closeFlavorModal(); });
     }
     grid.appendChild(btn);
   });
+}
+
+// Live-filters the flavor grid as the person types (name substring match).
+function filterFlavorGrid(query) {
+  const q     = query.trim().toLowerCase();
+  const grid  = document.getElementById("flavorGrid");
+  const btns  = grid.querySelectorAll(".flavor-btn:not(.no-flavor)");
+  let visible = 0;
+  btns.forEach(btn => {
+    const match = !q || (btn.dataset.name || "").includes(q);
+    btn.style.display = match ? "" : "none";
+    if (match) visible++;
+  });
+  let empty = grid.querySelector(".flavor-empty-msg");
+  if (!visible && q) {
+    if (!empty) {
+      empty = document.createElement("div");
+      empty.className = "flavor-empty-msg";
+      empty.textContent = "No flavors match “" + query.trim() + "”";
+      grid.appendChild(empty);
+    }
+  } else if (empty) {
+    empty.remove();
+  }
 }
 
 function closeFlavorModal() {
@@ -1623,6 +1840,7 @@ function placeOrder() {
 
   state.orders.push(order);
   state.shiftTotal += total;
+  bumpSalesTally(order.items, 1);
   state.currentItems=[]; state.pendingPaidOnline=false;
   document.getElementById("givenInput").value="";
   saveState();
@@ -1692,6 +1910,7 @@ function undoLastOrder() {
   vibe("undo");
   const last = state.orders.pop();
   state.shiftTotal -= last.total;
+  bumpSalesTally(last.items, -1);
   saveState(); renderDrinkButtons(); renderCurrentOrder(); renderOrdersLog(); updateHeaderStats();
   if (last.paidOnline) syncGcashExpense();
 }
@@ -1699,6 +1918,20 @@ function undoLastOrder() {
 function toggleOrderDone(id) {
   const order = state.orders.find(o => o.id === id);
   if (order) { order.done = !order.done; saveState(); renderOrdersLog(); }
+}
+
+// ── Void a specific order (any position, not just the last one) ──────────────
+function voidOrder(id) {
+  const order = state.orders.find(o => o.id === id);
+  if (!order) return;
+  if (!confirm(`Void this order (${fmt(order.total)})? This can't be undone.`)) return;
+  vibe("undo");
+  state.orders = state.orders.filter(o => o.id !== id);
+  state.shiftTotal -= order.total;
+  bumpSalesTally(order.items, -1);
+  saveState();
+  renderDrinkButtons(); renderCurrentOrder(); renderOrdersLog(); updateHeaderStats();
+  if (order.paidOnline) syncGcashExpense();
 }
 
 // ── Paid Online (GCash): toggling a placed order auto adds/removes its total
@@ -1829,11 +2062,12 @@ function renderOrdersLog() {
             : 'Change: —'}
         </span>
       </div>
-      <div style="padding:6px 14px 2px;">
-        <button class="paid-online-btn small${order.paidOnline?" active":""}"
+      <div style="padding:6px 14px 2px;display:flex;gap:6px;">
+        <button class="paid-online-btn small${order.paidOnline?" active":""}" style="flex:1;"
           onclick="event.stopPropagation();toggleOrderPaidOnline(${order.id})">
           ${order.paidOnline ? "✓ Paid Online (GCash)" : "📱 Mark Paid Online (GCash)"}
         </button>
+        <button class="void-order-btn" onclick="event.stopPropagation();voidOrder(${order.id})">🗑 Void</button>
       </div>`;
 
     const doneLabel = order.done ? "✓ Done" : "Mark Done";
@@ -1877,8 +2111,10 @@ function editOrderItem(orderId, itemKey, dir) {
     const rem = remainingCups();
     if ((rem[item.cup] ?? 0) <= 0) { vibe("error"); return; }
     item.qty++;
+    bumpSalesTallyDelta(item, 1);
   } else {
     item.qty--;
+    bumpSalesTallyDelta(item, -1);
     if (item.qty <= 0) order.items = order.items.filter(i => i.key !== itemKey);
   }
 
