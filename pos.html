@@ -9,6 +9,7 @@
   <meta name="theme-color" content="#6b4f36" />
   <title>BREWS.CO – POS</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/theme.js"></script>
   <style>
     body { align-items: flex-start; padding: 0; }
 
@@ -273,6 +274,31 @@
       border-radius: var(--radius-lg); font-weight: 700; font-size: 0.8rem; background: transparent;
       color: #a03030; letter-spacing: 0.02em;
     }
+
+    /* ── Theme modal ── */
+    .theme-section { margin-bottom: 18px; }
+    .theme-label { font-size: 0.78rem; font-weight: 700; color: var(--bark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .theme-color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    #themeColorInput {
+      width: 46px; height: 46px; border: 1.5px solid var(--latte); border-radius: var(--radius-md);
+      padding: 0; cursor: pointer; background: none; flex-shrink: 0;
+    }
+    .theme-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+    .theme-swatch {
+      width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--pearl);
+      box-shadow: 0 0 0 1.5px var(--latte); cursor: pointer; flex-shrink: 0; padding: 0;
+    }
+    .theme-swatch.active { box-shadow: 0 0 0 2px var(--roast); }
+    .theme-text-btn {
+      background: none; border: none; color: var(--mahogany); font-size: 0.78rem; font-weight: 700;
+      text-decoration: underline; cursor: pointer; padding: 4px 0; font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .theme-upload-btn {
+      flex: 1; padding: 11px; border: 1.5px dashed var(--mochaccino); border-radius: var(--radius-lg);
+      font-weight: 700; font-size: 0.82rem; background: transparent; color: var(--bark);
+      font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
+    }
+    .theme-upload-btn:hover { background: rgba(196,129,58,0.06); border-color: var(--caramel); color: var(--mahogany); }
 
     /* ── Auto-synced expense row (Paid Online / GCash) ── */
     .expense-row.auto-expense input {
@@ -784,6 +810,7 @@
         <span class="header-stat-val" id="shiftTotalDisplay">₱0.00</span>
       </div>
       <button class="flavor-settings-btn" onclick="openBestSellers()">🏆 Best Sellers</button>
+      <button class="flavor-settings-btn" onclick="openThemeModal()">🎨 Theme</button>
       <button class="flavor-settings-btn" onclick="openFlavorSettings()">⚙ Flavors</button>
     </div>
     <!-- Row 3: Single adaptive progress bar (to-quota → bonus mode) -->
@@ -1024,6 +1051,40 @@
     </div>
     <div id="bestSellersBody"></div>
     <button class="bs-reset-btn" id="bsResetBtn" onclick="resetSalesTally()" style="display:none;">Reset all-time stats</button>
+  </div>
+</div>
+
+<!-- ═══════════ THEME MODAL ═══════════ -->
+<div class="modal-overlay centered" id="themeModal" onclick="handleThemeOverlay(event)">
+  <div class="modal" style="max-width:440px;padding:20px;border-radius:18px;max-height:85vh;overflow-y:auto;">
+    <div class="modal-header-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--latte);">
+      <div>
+        <div class="modal-title">🎨 Theme</div>
+        <div class="modal-sub">Accent color & background photo</div>
+      </div>
+      <button class="modal-cancel-btn" onclick="closeThemeModal()">Done</button>
+    </div>
+
+    <div class="theme-section">
+      <div class="theme-label">Accent Color</div>
+      <div class="theme-color-row">
+        <input type="color" id="themeColorInput" value="#C4813A" oninput="onThemeColorChange(this.value)">
+        <div class="theme-swatches" id="themeSwatches"></div>
+      </div>
+      <button class="theme-text-btn" onclick="resetThemeAccent()">Reset to default caramel</button>
+    </div>
+
+    <div class="theme-section">
+      <div class="theme-label">Background Photo</div>
+      <input type="file" accept="image/*" id="themeBgInput" style="display:none;" onchange="onThemeBgSelected(this.files[0])">
+      <div style="display:flex;gap:8px;">
+        <button class="theme-upload-btn" onclick="document.getElementById('themeBgInput').click()">📷 Choose Photo</button>
+        <button class="theme-text-btn" id="themeBgClearBtn" style="display:none;flex-shrink:0;" onclick="clearThemeBg()">Remove</button>
+      </div>
+      <div id="themeBgPreviewWrap" style="display:none;margin-top:10px;">
+        <img id="themeBgPreview" style="width:100%;max-height:120px;object-fit:cover;border-radius:var(--radius-md);border:1.5px solid var(--latte);">
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1311,6 +1372,95 @@ function renderBestSellers() {
 }
 
 // ════════════════════════════════════════════════════
+//  THEME — accent color + background photo
+// ════════════════════════════════════════════════════
+const THEME_SWATCHES = ["#C4813A","#4A90D9","#4AA88A","#D46A9E","#7C6FD4","#D45A5A","#3D3D3D","#2E8B8B"];
+
+function openThemeModal() {
+  document.getElementById("themeColorInput").value = window.BrewsTheme.getAccent();
+  renderThemeSwatches();
+  updateThemeBgUI();
+  document.getElementById("themeModal").classList.add("open");
+}
+function closeThemeModal() { document.getElementById("themeModal").classList.remove("open"); }
+function handleThemeOverlay(e) { if (e.target === document.getElementById("themeModal")) closeThemeModal(); }
+
+function renderThemeSwatches() {
+  const current = window.BrewsTheme.getAccent().toLowerCase();
+  const wrap = document.getElementById("themeSwatches");
+  wrap.innerHTML = THEME_SWATCHES.map(c => `
+    <button type="button" class="theme-swatch${c.toLowerCase()===current?" active":""}"
+      style="background:${c};" onclick="onThemeColorChange('${c}')"></button>
+  `).join("");
+}
+
+function onThemeColorChange(hex) {
+  vibe("tap");
+  window.BrewsTheme.setAccent(hex);
+  document.getElementById("themeColorInput").value = hex;
+  renderThemeSwatches();
+}
+
+function resetThemeAccent() {
+  window.BrewsTheme.resetAccent();
+  document.getElementById("themeColorInput").value = window.BrewsTheme.BASE.caramel;
+  renderThemeSwatches();
+}
+
+function updateThemeBgUI() {
+  const bg = window.BrewsTheme.getBackground();
+  const clearBtn  = document.getElementById("themeBgClearBtn");
+  const wrap      = document.getElementById("themeBgPreviewWrap");
+  const preview   = document.getElementById("themeBgPreview");
+  if (bg) {
+    clearBtn.style.display = "block";
+    wrap.style.display     = "block";
+    preview.src            = bg;
+  } else {
+    clearBtn.style.display = "none";
+    wrap.style.display     = "none";
+    preview.src            = "";
+  }
+}
+
+// Resizes/compresses the chosen photo client-side before storing it
+// (localStorage has a low size ceiling, and a phone photo straight off
+// the camera would blow way past it).
+function onThemeBgSelected(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1280;
+      let { width, height } = img;
+      if (width > MAX || height > MAX) {
+        const scale = MAX / Math.max(width, height);
+        width  = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width; canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.72);
+      try {
+        window.BrewsTheme.setBackground(dataUrl);
+        updateThemeBgUI();
+      } catch (err) {
+        alert("That photo was too large to save. Try a smaller image.");
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearThemeBg() {
+  window.BrewsTheme.clearBackground();
+  updateThemeBgUI();
+}
+
+// ════════════════════════════════════════════════════
 //  ORDER LOG — save full shift orders for history page
 // ════════════════════════════════════════════════════
 const ORDER_LOG_KEY  = "brewsOrderLog";
@@ -1476,6 +1626,7 @@ function showPOS() {
   attachSwipeToDismiss("endShiftModal",       closeEndShift);
   attachSwipeToDismiss("flavorSettingsModal", closeFlavorSettings);
   attachSwipeToDismiss("bestSellersModal",    closeBestSellers);
+  attachSwipeToDismiss("themeModal",          closeThemeModal);
 }
 
 function resumeShift() {
