@@ -243,16 +243,6 @@ tbody tr:hover td { background: rgba(253,245,232,0.7); }
 .back-btn:hover { background: var(--latte); transform: translateY(-1px); }
 
 /* ── History List ── */
-.history-list { margin-top: 8px; }
-.history-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border: 1.5px solid var(--latte); border-radius: var(--radius-lg); background: var(--pearl); margin: 8px 0; box-shadow: 0 1px 4px rgba(60,20,0,0.06); transition: all .18s; }
-.history-item:hover { box-shadow: var(--shadow-warm); border-color: var(--mochaccino); transform: translateY(-1px); }
-.history-item .date { font-weight: 700; color: var(--mahogany); font-size: 0.88rem; }
-.history-item .actions { display: flex; gap: 8px; }
-.history-item .actions button { padding: 8px 14px; border-radius: var(--radius-md); border: none; font-weight: 700; font-size: 0.82rem; }
-.btn-restore { background: var(--grad-cta); color: #fff; box-shadow: 0 2px 8px rgba(196,129,58,0.30); }
-.btn-restore:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.btn-delete { background: var(--parchment); color: var(--bark); border: 1.5px solid var(--latte) !important; }
-.btn-delete:hover { background: #fae0de; color: var(--danger); }
 
 /* ── Responsive ── */
 @media (max-width: 600px) {

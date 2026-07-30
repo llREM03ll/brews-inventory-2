@@ -1,4 +1,4 @@
-const CACHE_NAME = "brews-inventory-v8";
+const CACHE_NAME = "brews-inventory-v9";
 const urlsToCache = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const urlsToCache = [
   "./calendar.html",
   "./manifest.json",
   "./css/styles.css",
+  "./js/theme.js",
   "./js/settings.js",
   "./js/sync.js",
   "./js/InventorySystem.js",

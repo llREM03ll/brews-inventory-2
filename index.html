@@ -278,7 +278,6 @@
     window.syncPush           = async function() { throw new Error("Sync not available."); };
     window.syncPull           = async function() { throw new Error("Sync not available."); };
     window.getLastSyncDisplay = () => null;
-    window.getDeviceRole      = () => localStorage.getItem("brewsDeviceRole") || "worker";
     window.setDeviceRole      = (r) => localStorage.setItem("brewsDeviceRole", r === "manager" ? "manager" : "worker");
   </script>
   <script src="js/sync.js" onerror="console.warn('sync.js not found')"></script>

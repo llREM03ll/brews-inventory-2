@@ -196,7 +196,6 @@
   </script>
   <script>
     if (typeof window.syncPush      !== "function") window.syncPush      = async () => { throw new Error("Sync unavailable"); };
-    if (typeof window.getDeviceRole !== "function") window.getDeviceRole = () => localStorage.getItem("brewsDeviceRole") || "worker";
   </script>
   <script src="js/sync.js" onerror="console.warn('sync.js not found')"></script>
   <script src="js/InventorySystem.js"></script>
