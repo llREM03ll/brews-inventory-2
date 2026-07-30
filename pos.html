@@ -72,6 +72,8 @@
     }
     .pos-header-row1 { display: flex; align-items: center; justify-content: space-between; width: 100%; }
     .pos-header-row2 { display: flex; align-items: center; gap: 6px; width: 100%; }
+    .pos-header-actions { display: flex; align-items: stretch; gap: 6px; width: 100%; margin-top: 6px; justify-content: flex-end; }
+    .pos-header-actions .flavor-settings-btn { flex: 0 1 auto; padding: 8px 14px; }
     .pos-header-left { display: flex; flex-direction: column; }
     .pos-header-brand { font-size: 1rem; font-weight: 800; color: #fff; letter-spacing: 0.1em; }
     .pos-header-meta  { font-size: 0.68rem; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; margin-top: 1px; display: flex; gap: 6px; }
@@ -105,11 +107,12 @@
 
     .drink-btn {
       position: relative; background: var(--cream); border: 2px solid var(--latte);
-      border-radius: var(--radius-lg); padding: 12px 6px 10px; display: flex;
-      flex-direction: column; align-items: center; gap: 2px; cursor: pointer;
+      border-radius: var(--radius-lg); padding: 10px 6px 8px; display: flex;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer;
       font-family: "Plus Jakarta Sans", sans-serif; transition: all .14s;
       box-shadow: 0 2px 5px rgba(107,61,30,0.06);
       -webkit-tap-highlight-color: transparent; user-select: none;
+      height: 116px; overflow: hidden;
     }
     .drink-btn:active { transform: scale(0.92); }
     .drink-btn.has-qty { border-color: #c7a27c; background: #fdf5ec; box-shadow: 0 3px 10px rgba(107,61,30,0.13); }
@@ -120,7 +123,10 @@
 
     .drink-btn-icon  { font-size: 1.4rem; line-height: 1; }
     .drink-btn-code  { font-size: 0.76rem; font-weight: 800; color: var(--mahogany); letter-spacing: 0.05em; }
-    .drink-btn-name  { font-size: 0.62rem; color: var(--bark); text-align: center; line-height: 1.2; }
+    .drink-btn-name  {
+      font-size: 0.62rem; color: var(--bark); text-align: center; line-height: 1.2;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
     .drink-btn-price { font-size: 0.7rem; font-weight: 700; color: var(--roast); margin-top: 1px; }
     .stock-pill {
       font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: var(--radius-pill);
@@ -193,21 +199,17 @@
     .order-item-qty   { font-size: 0.88rem; font-weight: 700; color: var(--roast); min-width: 22px; text-align: center; }
     .order-item-total { font-size: 0.84rem; font-weight: 600; color: var(--mahogany); min-width: 56px; text-align: right; font-variant-numeric: tabular-nums; }
 
-    /* ── Add-ons section in order panel ── */
-    .addons-section { padding: 8px 14px; border-top: 1px dashed var(--latte); }
-    .addons-section-label {
-      font-size: 0.68rem; font-weight: 700; color: var(--dust);
-      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 7px;
-    }
-    .addon-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+    /* ── Per-item add-ons (item add-on modal) ── */
+    .addon-pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
     .addon-pill {
-      display: flex; align-items: center; gap: 4px;
-      background: var(--parchment); border: 1.5px solid #e0c9b8; border-radius: var(--radius-pill);
-      padding: 4px 10px; font-size: 0.76rem; font-weight: 600; color: var(--mahogany);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      background: var(--pearl); border: 1.5px solid var(--latte); border-radius: var(--radius-md);
+      padding: 6px 5px; font-size: 0.76rem; font-weight: 600; color: var(--mahogany);
       cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; transition: all .14s;
-      -webkit-tap-highlight-color: transparent;
+      -webkit-tap-highlight-color: transparent; text-align: center; overflow: hidden;
+      aspect-ratio: 4 / 3;
     }
-    .addon-pill:hover  { background: var(--latte); border-color: #c7a27c; }
+    .addon-pill:hover  { background: var(--parchment); border-color: #c7a27c; }
     .addon-pill:active { transform: scale(0.93); }
     .addon-pill.active { background: #fdf5ec; border-color: #c7a27c; color: var(--roast); }
     .addon-pill-qty {
@@ -245,60 +247,6 @@
       -webkit-tap-highlight-color: transparent;
     }
     .void-order-btn:active { transform: scale(0.95); background: #f5d5d5; }
-
-    /* ── Best Sellers modal ── */
-    .bs-tabs { display: flex; gap: 6px; margin-bottom: 12px; }
-    .bs-tab {
-      flex: 1; background: var(--parchment); border: 1.5px solid var(--latte); border-radius: var(--radius-md);
-      padding: 8px; font-size: 0.8rem; font-weight: 700; color: var(--bark);
-      cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif;
-    }
-    .bs-tab.active { background: var(--grad-cta); color: #fff; border-color: transparent; }
-    .bs-row {
-      display: flex; align-items: center; gap: 10px; padding: 9px 4px;
-      border-bottom: 1px solid rgba(226,201,168,0.4);
-    }
-    .bs-rank {
-      width: 22px; text-align: center; font-weight: 800; font-size: 0.82rem; color: var(--mochaccino); flex-shrink: 0;
-    }
-    .bs-row:nth-child(-n+3) .bs-rank { color: var(--caramel); }
-    .bs-info { flex: 1; min-width: 0; }
-    .bs-name { font-size: 0.86rem; font-weight: 700; color: var(--bark); }
-    .bs-flavor { font-size: 0.72rem; color: var(--dust); }
-    .bs-stats { text-align: right; flex-shrink: 0; }
-    .bs-qty { font-size: 0.86rem; font-weight: 800; color: var(--mahogany); }
-    .bs-revenue { font-size: 0.7rem; color: var(--dust); }
-    .bs-empty { text-align: center; padding: 30px 10px; color: var(--dust); font-size: 0.86rem; }
-    .bs-reset-btn {
-      display: block; width: 100%; margin-top: 12px; padding: 10px; border: 1.5px dashed #e0a8a8;
-      border-radius: var(--radius-lg); font-weight: 700; font-size: 0.8rem; background: transparent;
-      color: #a03030; letter-spacing: 0.02em;
-    }
-
-    /* ── Theme modal ── */
-    .theme-section { margin-bottom: 18px; }
-    .theme-label { font-size: 0.78rem; font-weight: 700; color: var(--bark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-    .theme-color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    #themeColorInput {
-      width: 46px; height: 46px; border: 1.5px solid var(--latte); border-radius: var(--radius-md);
-      padding: 0; cursor: pointer; background: none; flex-shrink: 0;
-    }
-    .theme-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
-    .theme-swatch {
-      width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--pearl);
-      box-shadow: 0 0 0 1.5px var(--latte); cursor: pointer; flex-shrink: 0; padding: 0;
-    }
-    .theme-swatch.active { box-shadow: 0 0 0 2px var(--roast); }
-    .theme-text-btn {
-      background: none; border: none; color: var(--mahogany); font-size: 0.78rem; font-weight: 700;
-      text-decoration: underline; cursor: pointer; padding: 4px 0; font-family: "Plus Jakarta Sans", sans-serif;
-    }
-    .theme-upload-btn {
-      flex: 1; padding: 11px; border: 1.5px dashed var(--mochaccino); border-radius: var(--radius-lg);
-      font-weight: 700; font-size: 0.82rem; background: transparent; color: var(--bark);
-      font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
-    }
-    .theme-upload-btn:hover { background: rgba(196,129,58,0.06); border-color: var(--caramel); color: var(--mahogany); }
 
     /* ── Auto-synced expense row (Paid Online / GCash) ── */
     .expense-row.auto-expense input {
@@ -556,12 +504,14 @@
 
     /* ── Flavor settings modal ── */
     .flavor-settings-btn {
-      background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.22);
-      border-radius: var(--radius-md); padding: 6px 11px; color: rgba(255,255,255,0.7);
-      font-size: 0.78rem; font-weight: 700; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
-      transition: all .16s;
+      flex: 1; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: var(--radius-md); padding: 8px 4px; color: rgba(255,255,255,0.7);
+      font-size: 0.72rem; font-weight: 700; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
+      transition: all .16s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      text-align: center;
     }
     .flavor-settings-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .flavor-settings-btn:active { transform: scale(0.96); }
 
     .fsettings-cat { margin-bottom: 16px; }
     .fsettings-cat-title {
@@ -799,7 +749,7 @@
       </div>
       <button class="end-shift-btn" onclick="openEndShift()">⏹ End Shift</button>
     </div>
-    <!-- Row 2: Stats + Flavors -->
+    <!-- Row 2: Stats -->
     <div class="pos-header-row2">
       <div class="header-stat" style="flex:1;">
         <span class="header-stat-label">Orders</span>
@@ -809,8 +759,9 @@
         <span class="header-stat-label">Cup Sales</span>
         <span class="header-stat-val" id="shiftTotalDisplay">₱0.00</span>
       </div>
-      <button class="flavor-settings-btn" onclick="openBestSellers()">🏆 Best Sellers</button>
-      <button class="flavor-settings-btn" onclick="openThemeModal()">🎨 Theme</button>
+    </div>
+    <!-- Row 2b: Actions -->
+    <div class="pos-header-actions">
       <button class="flavor-settings-btn" onclick="openFlavorSettings()">⚙ Flavors</button>
     </div>
     <!-- Row 3: Single adaptive progress bar (to-quota → bonus mode) -->
@@ -1035,58 +986,6 @@
 
 <script src="js/settings.js"></script>
 
-<!-- ═══════════ BEST SELLERS MODAL ═══════════ -->
-<div class="modal-overlay centered" id="bestSellersModal" onclick="handleBestSellersOverlay(event)">
-  <div class="modal" style="max-width:480px;padding:20px;border-radius:18px;max-height:85vh;overflow-y:auto;">
-    <div class="modal-header-row" style="margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid var(--latte);">
-      <div>
-        <div class="modal-title">🏆 Best Sellers</div>
-        <div class="modal-sub">Ranked by cups sold</div>
-      </div>
-      <button class="modal-cancel-btn" onclick="closeBestSellers()">Done</button>
-    </div>
-    <div class="bs-tabs">
-      <button class="bs-tab active" id="bsTabShift" onclick="switchBestSellersTab('shift')">This Shift</button>
-      <button class="bs-tab" id="bsTabAll" onclick="switchBestSellersTab('all')">All-Time</button>
-    </div>
-    <div id="bestSellersBody"></div>
-    <button class="bs-reset-btn" id="bsResetBtn" onclick="resetSalesTally()" style="display:none;">Reset all-time stats</button>
-  </div>
-</div>
-
-<!-- ═══════════ THEME MODAL ═══════════ -->
-<div class="modal-overlay centered" id="themeModal" onclick="handleThemeOverlay(event)">
-  <div class="modal" style="max-width:440px;padding:20px;border-radius:18px;max-height:85vh;overflow-y:auto;">
-    <div class="modal-header-row" style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--latte);">
-      <div>
-        <div class="modal-title">🎨 Theme</div>
-        <div class="modal-sub">Accent color & background photo</div>
-      </div>
-      <button class="modal-cancel-btn" onclick="closeThemeModal()">Done</button>
-    </div>
-
-    <div class="theme-section">
-      <div class="theme-label">Accent Color</div>
-      <div class="theme-color-row">
-        <input type="color" id="themeColorInput" value="#C4813A" oninput="onThemeColorChange(this.value)">
-        <div class="theme-swatches" id="themeSwatches"></div>
-      </div>
-      <button class="theme-text-btn" onclick="resetThemeAccent()">Reset to default caramel</button>
-    </div>
-
-    <div class="theme-section">
-      <div class="theme-label">Background Photo</div>
-      <input type="file" accept="image/*" id="themeBgInput" style="display:none;" onchange="onThemeBgSelected(this.files[0])">
-      <div style="display:flex;gap:8px;">
-        <button class="theme-upload-btn" onclick="document.getElementById('themeBgInput').click()">📷 Choose Photo</button>
-        <button class="theme-text-btn" id="themeBgClearBtn" style="display:none;flex-shrink:0;" onclick="clearThemeBg()">Remove</button>
-      </div>
-      <div id="themeBgPreviewWrap" style="display:none;margin-top:10px;">
-        <img id="themeBgPreview" style="width:100%;max-height:120px;object-fit:cover;border-radius:var(--radius-md);border:1.5px solid var(--latte);">
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="console.warn('Firebase CDN unavailable')"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js" onerror="console.warn('Firebase CDN unavailable')"></script>
@@ -1301,164 +1200,6 @@ function bumpSalesTally(items, sign) {
   (items || []).forEach(it => bumpSalesTallyDelta(it, sign * it.qty));
 }
 
-function resetSalesTally() {
-  if (!confirm("Reset all-time best-seller stats? This can't be undone.")) return;
-  localStorage.removeItem(SALES_TALLY_KEY);
-  renderBestSellers();
-}
-
-let bestSellersTab = "shift";
-
-function openBestSellers() {
-  bestSellersTab = "shift";
-  document.getElementById("bsTabShift").classList.add("active");
-  document.getElementById("bsTabAll").classList.remove("active");
-  document.getElementById("bsResetBtn").style.display = "none";
-  renderBestSellers();
-  document.getElementById("bestSellersModal").classList.add("open");
-}
-function closeBestSellers() {
-  document.getElementById("bestSellersModal").classList.remove("open");
-}
-function handleBestSellersOverlay(e) {
-  if (e.target === document.getElementById("bestSellersModal")) closeBestSellers();
-}
-function switchBestSellersTab(tab) {
-  bestSellersTab = tab;
-  document.getElementById("bsTabShift").classList.toggle("active", tab==="shift");
-  document.getElementById("bsTabAll").classList.toggle("active", tab==="all");
-  document.getElementById("bsResetBtn").style.display = tab==="all" ? "block" : "none";
-  renderBestSellers();
-}
-
-function renderBestSellers() {
-  const body = document.getElementById("bestSellersBody");
-  let rows;
-
-  if (bestSellersTab === "shift") {
-    // Build from the current live shift's orders — no extra storage needed.
-    const map = {};
-    state.orders.forEach(o => o.items.forEach(it => {
-      const key = it.code + "|" + (it.flavor || "");
-      if (!map[key]) map[key] = { name: it.name, flavor: it.flavor || "", qty: 0, revenue: 0 };
-      map[key].qty     += it.qty;
-      map[key].revenue += (it.unitPrice + getItemAddonTotal(it)) * it.qty;
-    }));
-    rows = Object.values(map);
-  } else {
-    rows = Object.values(getSalesTally());
-  }
-
-  rows.sort((a,b) => b.qty - a.qty);
-
-  if (!rows.length) {
-    body.innerHTML = `<div class="bs-empty">No sales yet${bestSellersTab==="shift" ? " this shift" : ""}.</div>`;
-    return;
-  }
-
-  body.innerHTML = rows.map((r,i) => `
-    <div class="bs-row">
-      <span class="bs-rank">${i+1}</span>
-      <div class="bs-info">
-        <div class="bs-name">${r.name}</div>
-        ${r.flavor ? `<div class="bs-flavor">${r.flavor}</div>` : ""}
-      </div>
-      <div class="bs-stats">
-        <div class="bs-qty">${r.qty} cup${r.qty===1?"":"s"}</div>
-        <div class="bs-revenue">${fmt(r.revenue)}</div>
-      </div>
-    </div>
-  `).join("");
-}
-
-// ════════════════════════════════════════════════════
-//  THEME — accent color + background photo
-// ════════════════════════════════════════════════════
-const THEME_SWATCHES = ["#C4813A","#4A90D9","#4AA88A","#D46A9E","#7C6FD4","#D45A5A","#3D3D3D","#2E8B8B"];
-
-function openThemeModal() {
-  document.getElementById("themeColorInput").value = window.BrewsTheme.getAccent();
-  renderThemeSwatches();
-  updateThemeBgUI();
-  document.getElementById("themeModal").classList.add("open");
-}
-function closeThemeModal() { document.getElementById("themeModal").classList.remove("open"); }
-function handleThemeOverlay(e) { if (e.target === document.getElementById("themeModal")) closeThemeModal(); }
-
-function renderThemeSwatches() {
-  const current = window.BrewsTheme.getAccent().toLowerCase();
-  const wrap = document.getElementById("themeSwatches");
-  wrap.innerHTML = THEME_SWATCHES.map(c => `
-    <button type="button" class="theme-swatch${c.toLowerCase()===current?" active":""}"
-      style="background:${c};" onclick="onThemeColorChange('${c}')"></button>
-  `).join("");
-}
-
-function onThemeColorChange(hex) {
-  vibe("tap");
-  window.BrewsTheme.setAccent(hex);
-  document.getElementById("themeColorInput").value = hex;
-  renderThemeSwatches();
-}
-
-function resetThemeAccent() {
-  window.BrewsTheme.resetAccent();
-  document.getElementById("themeColorInput").value = window.BrewsTheme.BASE.caramel;
-  renderThemeSwatches();
-}
-
-function updateThemeBgUI() {
-  const bg = window.BrewsTheme.getBackground();
-  const clearBtn  = document.getElementById("themeBgClearBtn");
-  const wrap      = document.getElementById("themeBgPreviewWrap");
-  const preview   = document.getElementById("themeBgPreview");
-  if (bg) {
-    clearBtn.style.display = "block";
-    wrap.style.display     = "block";
-    preview.src            = bg;
-  } else {
-    clearBtn.style.display = "none";
-    wrap.style.display     = "none";
-    preview.src            = "";
-  }
-}
-
-// Resizes/compresses the chosen photo client-side before storing it
-// (localStorage has a low size ceiling, and a phone photo straight off
-// the camera would blow way past it).
-function onThemeBgSelected(file) {
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 1280;
-      let { width, height } = img;
-      if (width > MAX || height > MAX) {
-        const scale = MAX / Math.max(width, height);
-        width  = Math.round(width * scale);
-        height = Math.round(height * scale);
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = width; canvas.height = height;
-      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.72);
-      try {
-        window.BrewsTheme.setBackground(dataUrl);
-        updateThemeBgUI();
-      } catch (err) {
-        alert("That photo was too large to save. Try a smaller image.");
-      }
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function clearThemeBg() {
-  window.BrewsTheme.clearBackground();
-  updateThemeBgUI();
-}
 
 // ════════════════════════════════════════════════════
 //  ORDER LOG — save full shift orders for history page
@@ -1625,8 +1366,6 @@ function showPOS() {
   attachSwipeToDismiss("receiptModal",        closeReceiptModal);
   attachSwipeToDismiss("endShiftModal",       closeEndShift);
   attachSwipeToDismiss("flavorSettingsModal", closeFlavorSettings);
-  attachSwipeToDismiss("bestSellersModal",    closeBestSellers);
-  attachSwipeToDismiss("themeModal",          closeThemeModal);
 }
 
 function resumeShift() {

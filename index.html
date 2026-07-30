@@ -146,6 +146,31 @@
     .smodal-input:disabled { background:var(--parchment); color:var(--dust); border-color:var(--latte); cursor:not-allowed; }
     .settings-locked-banner { background:#fdf5e0; border:1.5px solid #e8d5a0; border-radius:var(--radius-lg); padding:12px 14px; margin-bottom:18px; font-size:0.82rem; color:#8a6a20; line-height:1.55; text-align:center; }
 
+    /* ── Theme section (accent color + background photo) ── */
+    .theme-section { margin-bottom: 18px; }
+    .theme-label { font-size: 0.78rem; font-weight: 700; color: var(--bark); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .theme-color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    #themeColorInput {
+      width: 46px; height: 46px; border: 1.5px solid var(--latte); border-radius: var(--radius-md);
+      padding: 0; cursor: pointer; background: none; flex-shrink: 0;
+    }
+    .theme-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+    .theme-swatch {
+      width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--pearl);
+      box-shadow: 0 0 0 1.5px var(--latte); cursor: pointer; flex-shrink: 0; padding: 0;
+    }
+    .theme-swatch.active { box-shadow: 0 0 0 2px var(--roast); }
+    .theme-text-btn {
+      background: none; border: none; color: var(--mahogany); font-size: 0.78rem; font-weight: 700;
+      text-decoration: underline; cursor: pointer; padding: 4px 0; font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .theme-upload-btn {
+      flex: 1; padding: 11px; border: 1.5px dashed var(--mochaccino); border-radius: var(--radius-lg);
+      font-weight: 700; font-size: 0.82rem; background: transparent; color: var(--bark);
+      font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
+    }
+    .theme-upload-btn:hover { background: rgba(196,129,58,0.06); border-color: var(--caramel); color: var(--mahogany); }
+
     .role-toggle { display:flex; gap:8px; margin-bottom:10px; }
     .role-btn { flex:1; padding:10px 14px; border-radius:var(--radius-md); font-size:0.84rem; font-weight:700; font-family:"Plus Jakarta Sans",sans-serif; cursor:pointer; transition:all .16s; text-align:center; }
     .role-btn.active { background:var(--grad-cta); color:#fff; border:none; box-shadow:var(--shadow-btn); }
@@ -465,6 +490,32 @@
 
       const lockedBanner = locked ? `<div class="settings-locked-banner">🔒 Settings are managed by the Manager device.<br>Switch to Manager mode above to make changes.</div>` : "";
 
+      const themeSection = `
+        <div class="smodal-section">
+          <div class="smodal-section-title">🎨 Theme (this device)</div>
+          <div class="theme-section">
+            <div class="theme-label">Accent Color</div>
+            <div class="theme-color-row">
+              <input type="color" id="themeColorInput" value="#C4813A" oninput="onThemeColorChange(this.value)">
+              <div class="theme-swatches" id="themeSwatches"></div>
+            </div>
+            <button type="button" class="theme-text-btn" onclick="resetThemeAccent()">Reset to default caramel</button>
+          </div>
+          <div class="theme-section" style="margin-bottom:0;">
+            <div class="theme-label">Background Photo</div>
+            <input type="file" accept="image/*" id="themeBgInput" style="display:none;" onchange="onThemeBgSelected(this.files[0])">
+            <div style="display:flex;gap:8px;">
+              <button type="button" class="theme-upload-btn" onclick="document.getElementById('themeBgInput').click()">📷 Choose Photo</button>
+              <button type="button" class="theme-text-btn" id="themeBgClearBtn" style="display:none;flex-shrink:0;" onclick="clearThemeBg()">Remove</button>
+            </div>
+            <div id="themeBgPreviewWrap" style="display:none;margin-top:10px;">
+              <img id="themeBgPreview" style="width:100%;max-height:120px;object-fit:cover;border-radius:var(--radius-md);border:1.5px solid var(--latte);">
+            </div>
+            <div style="font-size:0.72rem;color:var(--dust);margin-top:8px;line-height:1.5;">Saved per device — applies across POS, Inventory &amp; Calendar. Not affected by Worker/Manager lock.</div>
+          </div>
+        </div>`;
+
+
       const addonRows = Object.entries(s.addonPrices).map(([name, price]) => `
         <div class="expense-row saddon-row">
           <input class="smodal-input saddon-name"  type="text"   value="${name}"  placeholder="Add-on name"${locked?" disabled":""}>
@@ -491,7 +542,7 @@
           </div>`:""}
         </div>`).join("");
 
-      document.getElementById("settingsBody").innerHTML = roleSection + lockedBanner + `
+      document.getElementById("settingsBody").innerHTML = themeSection + roleSection + lockedBanner + `
         <div class="smodal-section">
           <div class="smodal-section-title">Drink Prices (₱)</div>
           <div class="smodal-grid">
@@ -539,6 +590,90 @@
         </div>`;
 
       Object.keys(CAT_LABELS).forEach(cat => renderFlavorCat(cat));
+      renderThemeSection();
+    }
+
+    // ── Theme (accent color + background photo) ──────────────────────────────
+    const THEME_SWATCHES = ["#C4813A","#4A90D9","#4AA88A","#D46A9E","#7C6FD4","#D45A5A","#3D3D3D","#2E8B8B"];
+
+    function renderThemeSection() {
+      document.getElementById("themeColorInput").value = window.BrewsTheme.getAccent();
+      renderThemeSwatches();
+      updateThemeBgUI();
+    }
+
+    function renderThemeSwatches() {
+      const current = window.BrewsTheme.getAccent().toLowerCase();
+      const wrap = document.getElementById("themeSwatches");
+      wrap.innerHTML = THEME_SWATCHES.map(c => `
+        <button type="button" class="theme-swatch${c.toLowerCase()===current?" active":""}"
+          style="background:${c};" onclick="onThemeColorChange('${c}')"></button>
+      `).join("");
+    }
+
+    function onThemeColorChange(hex) {
+      window.BrewsTheme.setAccent(hex);
+      document.getElementById("themeColorInput").value = hex;
+      renderThemeSwatches();
+    }
+
+    function resetThemeAccent() {
+      window.BrewsTheme.resetAccent();
+      document.getElementById("themeColorInput").value = window.BrewsTheme.BASE.caramel;
+      renderThemeSwatches();
+    }
+
+    function updateThemeBgUI() {
+      const bg       = window.BrewsTheme.getBackground();
+      const clearBtn = document.getElementById("themeBgClearBtn");
+      const wrap     = document.getElementById("themeBgPreviewWrap");
+      const preview  = document.getElementById("themeBgPreview");
+      if (bg) {
+        clearBtn.style.display = "block";
+        wrap.style.display     = "block";
+        preview.src            = bg;
+      } else {
+        clearBtn.style.display = "none";
+        wrap.style.display     = "none";
+        preview.src            = "";
+      }
+    }
+
+    // Resizes/compresses the chosen photo client-side before storing it
+    // (localStorage has a low size ceiling, and a phone photo straight off
+    // the camera would blow way past it).
+    function onThemeBgSelected(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 1280;
+          let { width, height } = img;
+          if (width > MAX || height > MAX) {
+            const scale = MAX / Math.max(width, height);
+            width  = Math.round(width * scale);
+            height = Math.round(height * scale);
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width; canvas.height = height;
+          canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.72);
+          try {
+            window.BrewsTheme.setBackground(dataUrl);
+            updateThemeBgUI();
+          } catch (err) {
+            alert("That photo was too large to save. Try a smaller image.");
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearThemeBg() {
+      window.BrewsTheme.clearBackground();
+      updateThemeBgUI();
     }
   </script>
 

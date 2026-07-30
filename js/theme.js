@@ -26,7 +26,12 @@
     mochaccino: "#C4A07A",
     bark:       "#9A7050",
     dust:       "#B89870",
+    dusk:       "#EED9BE",
   };
+  // The body::before wash overlay reuses these three hues at fixed alphas —
+  // rotating them keeps the background wash matching the accent instead of
+  // staying a fixed hardcoded brown underneath everything else.
+  const TINT_SOURCE = { tint1: ["cream", 0.78], tint2: ["parchment", 0.72], tint3: ["dusk", 0.76] };
   // Extra literal hexes baked into gradients (not standalone --vars)
   const GRAD_HEX = {
     ctaDark: "#8B4A1A",   // 3rd stop of --grad-cta
@@ -75,6 +80,10 @@
     return hslToHex(h + deltaHue, s, l);
   }
 
+  function hexToRgb(hex) {
+    return { r: parseInt(hex.slice(1,3),16), g: parseInt(hex.slice(3,5),16), b: parseInt(hex.slice(5,7),16) };
+  }
+
   function applyAccent(accentHex) {
     const deltaHue = hexToHsl(accentHex).h - REF_HUE;
     const root = document.documentElement.style;
@@ -88,12 +97,16 @@
     root.setProperty("--grad-cta",  `linear-gradient(135deg, ${rotated.honey} 0%, ${rotated.caramel} 40%, ${rg.ctaDark} 100%)`);
     root.setProperty("--grad-dark", `linear-gradient(160deg, ${rg.darkA} 0%, ${rg.darkB} 50%, ${rg.darkC} 100%)`);
     root.setProperty("--grad-card", `linear-gradient(145deg, ${rotated.pearl} 0%, ${rotated.cream} 100%)`);
+    Object.entries(TINT_SOURCE).forEach(([varName, [baseKey, alpha]]) => {
+      const { r, g, b } = hexToRgb(rotated[baseKey]);
+      root.setProperty("--" + varName.replace("tint","tint-"), `rgba(${r},${g},${b},${alpha})`);
+    });
   }
 
   function resetAccent() {
     const root = document.documentElement.style;
     Object.keys(BASE).forEach(k => root.removeProperty("--" + k));
-    ["--grad-cta","--grad-dark","--grad-card"].forEach(k => root.removeProperty(k));
+    ["--grad-cta","--grad-dark","--grad-card","--tint-1","--tint-2","--tint-3"].forEach(k => root.removeProperty(k));
   }
 
   // Background photo is applied via an injected <style> tag (works even
