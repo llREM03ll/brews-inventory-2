@@ -11,15 +11,12 @@
   <link rel="stylesheet" href="css/styles.css" />
   <script src="js/theme.js"></script>
   <script src="js/nav.js"></script>
+  <script src="js/header.js"></script>
   <style>
     body { align-items: flex-start; }
     .container { max-width: 720px; }
 
     /* ── Top bar ── */
-    .top-bar {
-      display: flex; align-items: center;
-      justify-content: space-between; margin-bottom: 18px;
-    }
     .delete-all-btn {
       display: inline-flex; align-items: center; gap: 5px;
       background: var(--danger-bg); border: 1.5px solid var(--danger-border); border-radius: var(--radius-md);
@@ -270,21 +267,17 @@
   <div id="calSyncToast"></div>
   <div class="offline-pill" id="calOfflinePill">📡 Offline — changes save locally</div>
 
-  <div class="top-bar">
-    <a href="index.html" class="back-btn">← Back</a>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <button class="export-csv-btn" id="calExportBtn" onclick="exportHistoryCSV()"
-        style="display:none;">📊 Export CSV</button>
-      <button class="pull-cloud-btn" id="calPullBtn" onclick="calPullFromCloud()"
-        style="display:none;">⬇️ Pull Cloud</button>
-      <button class="delete-all-btn" onclick="deleteAllHistory()">🗑 Delete All</button>
-    </div>
-  </div>
-
-  <a href="index.html" style="text-decoration:none;display:block;text-align:center;">
-    <div class="brand">BREWS.CO</div>
-    <div class="brand-sub">History</div>
-  </a>
+  <div id="calHeaderRoot"></div>
+  <script>
+    document.getElementById("calHeaderRoot").innerHTML = renderPageHeader({
+      subtitle: "History",
+      extraButtonsHTML: `
+        <button class="export-csv-btn" id="calExportBtn" onclick="exportHistoryCSV()" style="display:none;">📊 Export CSV</button>
+        <button class="pull-cloud-btn" id="calPullBtn" onclick="calPullFromCloud()" style="display:none;">⬇️ Pull Cloud</button>
+        <button class="delete-all-btn" onclick="deleteAllHistory()">🗑 Delete All</button>
+      `
+    });
+  </script>
 
   <div class="month-nav">
     <button onclick="changeMonth(-1)">&#8592;</button>
@@ -898,7 +891,9 @@
   }
 </script>
 
-<script>document.write(renderBottomNav("history"));</script>
+<script>document.write(renderBottomNav("history", {
+  variant: getDeviceRole() === "manager" ? "manager" : "worker"
+}));</script>
 <script>
   applyBottomNavRole();
   const _nav = performance.getEntriesByType('navigation')[0];

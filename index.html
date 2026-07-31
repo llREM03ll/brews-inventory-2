@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/styles.css" />
   <script src="js/theme.js"></script>
   <script src="js/nav.js"></script>
+  <script src="js/header.js"></script>
   <style>
     body { padding: 0; }
 
@@ -256,8 +257,11 @@
     </div>
   </div>
 
-  <!-- Worker bottom nav (hidden for managers via JS) -->
-  <script>document.write(renderBottomNav("", { navId: "bottomNav" }));</script>
+  <!-- Bottom nav: worker (Calculate/Shift/History) or manager (Home/History/Settings) -->
+  <script>document.write(renderBottomNav(getDeviceRole() === "manager" ? "home" : "", {
+    navId: "bottomNav",
+    variant: getDeviceRole() === "manager" ? "manager" : "worker"
+  }));</script>
 
   <script src="js/settings.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js" onerror="console.warn('Firebase CDN unavailable')"></script>
@@ -366,6 +370,12 @@
     function closeSettings() { document.getElementById("settingsModal").classList.remove("open"); }
     function handleSettingsOverlay(e) { if (e.target === document.getElementById("settingsModal")) closeSettings(); }
 
+    // Deep link from another page's Settings icon (see header.js: goToSettings())
+    if (new URLSearchParams(location.search).get("settings") === "1") {
+      openSettings();
+      history.replaceState(null, "", location.pathname);
+    }
+
     function confirmResetSettings() {
       if (getDeviceRole() !== "manager") return;
       if (!confirm("Reset all settings to defaults? This cannot be undone.")) return;
@@ -385,13 +395,19 @@
       const resume  = document.getElementById("resumeBanner");
       const viewHist= document.getElementById("viewHistoryBtn");
       const roleSub = document.getElementById("homeRoleSub");
+
+      if (nav) {
+        nav.outerHTML = renderBottomNav(isManager ? "home" : "", {
+          navId: "bottomNav",
+          variant: isManager ? "manager" : "worker"
+        });
+        applyBottomNavRole();
+      }
       if (isManager) {
-        if (nav) { nav.style.display = "none"; document.body.classList.remove("has-bottom-nav"); }
         if (resume)   resume.style.display = "none";
         if (viewHist) viewHist.style.display = "flex";
         if (roleSub)  roleSub.textContent = "Manager View";
       } else {
-        if (nav) { nav.style.display = "flex"; document.body.classList.add("has-bottom-nav"); }
         if (resume && localStorage.getItem("brewsResumeShift")) resume.style.display = "flex";
         if (viewHist) viewHist.style.display = "none";
         if (roleSub)  roleSub.textContent = "Inventory System";

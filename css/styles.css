@@ -278,6 +278,9 @@ tbody tr:hover td { background: rgba(253,245,232,0.7); }
 /* ── Back button ── */
 .back-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--parchment); border: 1.5px solid var(--latte); border-radius: var(--radius-md); padding: 8px 14px; font-weight: 600; font-size: 0.83rem; color: var(--mahogany); cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; text-decoration: none; transition: all .18s; }
 .back-btn:hover { background: var(--latte); transform: translateY(-1px); }
+.top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.header-settings-btn { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; background: var(--parchment); border: 1.5px solid var(--latte); border-radius: var(--radius-md); font-size: 1rem; cursor: pointer; transition: all .18s; }
+.header-settings-btn:hover { background: var(--latte); transform: translateY(-1px); }
 
 /* ── History List ── */
 
