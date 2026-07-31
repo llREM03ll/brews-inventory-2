@@ -23,6 +23,43 @@
   --success:    #4A8A4A;
   --danger:     #B85040;
 
+  /* ── Status: success (green) ──────────────────────────────
+     Consolidates ~35 raw hex greens found scattered across
+     index/pos/calendar/calculate into one canonical set. */
+  --success-light:       #4A9E4A; /* gradient light stop */
+  --success-mid:         #7AB87A; /* icon dots / gradient stop / focus border */
+  --success-dark:        #3A7A3A; /* text & icon color */
+  --success-bg:          #F0F7F0; /* light tint background */
+  --success-bg-alt:      #E6F5E6; /* badge tint background */
+  --success-bg-soft:     #E0F0E0; /* role badge / hover background */
+  --success-border:      #B8DDB8;
+  --success-hover-border:#8ABA8A;
+
+  /* ── Status: danger (red) ── */
+  --danger-soft:    #C0665A; /* softer red for text/links */
+  --danger-deep:    #C04020;
+  --danger-darkest: #8B2500;
+  --danger-bg:       #FDF0F0; /* light tint background */
+  --danger-bg-hover: #FAE0DE;
+  --danger-border:   #F0D5D5;
+
+  /* ── Status: info (blue) ── */
+  --info:        #2A5A9A;
+  --info-deep:   #1A7A9A;
+  --info-bg:     #E6F0FA;
+  --info-border: #90B8E0;
+
+  /* ── Neutrals: warm sand/clay (cards, badges, calendar) ── */
+  --sand:        #F0E4D8;
+  --sand-border: #E0C9B8;
+  --sand-hover:  #E4D0BF;
+  --sand-alt:    #FDF5EC;
+  --clay:        #C7A27C;
+  --clay-light:  #D4A97C;
+  --clay-dark:   #9A6E52;
+
+  --white: #FFFFFF;
+
   --grad-cta:   linear-gradient(135deg, #D4A55A 0%, #C4813A 40%, #8B4A1A 100%);
   --grad-dark:  linear-gradient(160deg, #2D1106 0%, #4A1E08 50%, #3D1A07 100%);
   --grad-card:  linear-gradient(145deg, #FFFCF5 0%, #FDF5E8 100%);

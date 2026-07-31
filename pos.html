@@ -10,18 +10,19 @@
   <title>BREWS.CO – POS</title>
   <link rel="stylesheet" href="css/styles.css" />
   <script src="js/theme.js"></script>
+  <script src="js/nav.js"></script>
   <style>
     body { align-items: flex-start; padding: 0; }
 
     /* ── Carryover button ── */
     .carryover-btn {
       display: flex; align-items: center; gap: 7px; width: 100%;
-      background: #f0f7f0; border: 1.5px solid #b8ddb8; border-radius: var(--radius-md);
-      padding: 11px 14px; font-size: 0.84rem; font-weight: 700; color: #3a7a3a;
+      background: var(--success-bg); border: 1.5px solid var(--success-border); border-radius: var(--radius-md);
+      padding: 11px 14px; font-size: 0.84rem; font-weight: 700; color: var(--success-dark);
       font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer; margin-bottom: 12px; transition: all .18s;
     }
-    .carryover-btn:hover { background: #e0f0e0; border-color: #8aba8a; transform: translateY(-1px); }
-    .carryover-meta { font-size: 0.7rem; color: #7ab87a; font-weight: 500; margin-left: auto; }
+    .carryover-btn:hover { background: var(--success-bg-soft); border-color: var(--success-hover-border); transform: translateY(-1px); }
+    .carryover-meta { font-size: 0.7rem; color: var(--success-mid); font-weight: 500; margin-left: auto; }
 
     /* ── Setup cup stack ── */
     .beg-cups-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
@@ -29,7 +30,7 @@
       background: var(--pearl); border: 1.5px solid var(--latte); border-radius: var(--radius-lg);
       padding: 14px 16px; transition: border-color .16s;
     }
-    .beg-cup-card:focus-within { border-color: #c7a27c; background: #fff; }
+    .beg-cup-card:focus-within { border-color: var(--clay); background: var(--white); }
     .beg-cup-name {
       font-size: 0.7rem; font-weight: 700; color: var(--dust);
       letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px;
@@ -53,7 +54,7 @@
     .start-btn {
       width: 100%; padding: 13px;
       background: var(--grad-cta);
-      color: #fff; border: none; border-radius: var(--radius-lg); font-size: 0.92rem;
+      color: var(--white); border: none; border-radius: var(--radius-lg); font-size: 0.92rem;
       font-weight: 700; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
       box-shadow: 0 3px 12px rgba(107,61,30,0.28); transition: all .18s;
     }
@@ -75,7 +76,7 @@
     .pos-header-actions { display: flex; align-items: stretch; gap: 6px; width: 100%; margin-top: 6px; justify-content: flex-end; }
     .pos-header-actions .flavor-settings-btn { flex: 0 1 auto; padding: 8px 14px; }
     .pos-header-left { display: flex; flex-direction: column; }
-    .pos-header-brand { font-size: 1rem; font-weight: 800; color: #fff; letter-spacing: 0.1em; }
+    .pos-header-brand { font-size: 1rem; font-weight: 800; color: var(--white); letter-spacing: 0.1em; }
     .pos-header-meta  { font-size: 0.68rem; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; margin-top: 1px; display: flex; gap: 6px; }
     .pos-clock        { font-variant-numeric: tabular-nums; }
     .header-stat {
@@ -83,10 +84,10 @@
       border-radius: var(--radius-md); padding: 6px 11px; text-align: right;
     }
     .header-stat-label { font-size: 0.6rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.08em; display: block; }
-    .header-stat-val   { font-size: 0.92rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+    .header-stat-val   { font-size: 0.92rem; font-weight: 700; color: var(--white); font-variant-numeric: tabular-nums; }
     .end-shift-btn {
       background: rgba(210,70,70,0.24); border: 1.5px solid rgba(255,120,120,0.5);
-      border-radius: var(--radius-md); padding: 8px 16px; color: #fff; font-weight: 700;
+      border-radius: var(--radius-md); padding: 8px 16px; color: var(--white); font-weight: 700;
       font-size: 0.82rem; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer; transition: all .2s;
       white-space: nowrap;
     }
@@ -115,9 +116,9 @@
       height: 116px; overflow: hidden;
     }
     .drink-btn:active { transform: scale(0.92); }
-    .drink-btn.has-qty { border-color: #c7a27c; background: #fdf5ec; box-shadow: 0 3px 10px rgba(107,61,30,0.13); }
-    .drink-btn.low-stock { border-color: #e8b87a; background: #fff8f0; }
-    .drink-btn.out-stock { border-color: #e8a0a0; background: #fff4f4; opacity: 0.6; pointer-events: none; }
+    .drink-btn.has-qty { border-color: var(--clay); background: var(--sand-alt); box-shadow: 0 3px 10px rgba(107,61,30,0.13); }
+    .drink-btn.low-stock { border-color: #e8b87a; background: var(--white)8f0; }
+    .drink-btn.out-stock { border-color: #e8a0a0; background: var(--white)4f4; opacity: 0.6; pointer-events: none; }
     .drink-btn.fruit-tea { border-style: dashed; }
     .drink-btn.fruit-tea.has-qty { border-style: solid; }
 
@@ -130,14 +131,14 @@
     .drink-btn-price { font-size: 0.7rem; font-weight: 700; color: var(--roast); margin-top: 1px; }
     .stock-pill {
       font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: var(--radius-pill);
-      margin-top: 2px; background: #f0e4d8; color: var(--bark); letter-spacing: 0.03em;
+      margin-top: 2px; background: var(--sand); color: var(--bark); letter-spacing: 0.03em;
     }
     .drink-btn.low-stock .stock-pill { background: #fde8c8; color: #b06820; }
     .drink-btn.out-stock .stock-pill { background: #fdd8d8; color: #b04040; }
     .qty-badge {
       position: absolute; top: -7px; right: -7px;
       background: var(--grad-cta);
-      color: #fff; font-size: 0.68rem; font-weight: 800;
+      color: var(--white); font-size: 0.68rem; font-weight: 800;
       width: 20px; height: 20px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 2px 6px rgba(107,61,30,0.35);
@@ -165,13 +166,13 @@
       padding: 2px 7px; border-radius: 6px; transition: background .15s; display: none;
     }
     .undo-btn.visible { display: inline; }
-    .undo-btn:hover { background: #f0e4d8; }
+    .undo-btn:hover { background: var(--sand); }
     .clear-order-btn {
-      background: none; border: none; font-size: 0.72rem; color: #c0665a;
+      background: none; border: none; font-size: 0.72rem; color: var(--danger-soft);
       font-weight: 600; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
       padding: 2px 7px; border-radius: 6px; transition: background .15s;
     }
-    .clear-order-btn:hover { background: #fae0de; }
+    .clear-order-btn:hover { background: var(--danger-bg-hover); }
 
     .order-items { padding: 8px 14px; min-height: 50px; max-height: 180px; overflow-y: auto; }
     .empty-order { text-align: center; color: var(--mochaccino); font-size: 0.82rem; padding: 10px 0; }
@@ -189,12 +190,12 @@
     .order-item-flavor { font-size: 0.72rem; color: var(--bark); }
     .order-item-qty-controls { display: flex; align-items: center; gap: 4px; }
     .qty-btn {
-      width: 26px; height: 26px; border-radius: 8px; border: 1.5px solid #e0c9b8;
+      width: 26px; height: 26px; border-radius: 8px; border: 1.5px solid var(--sand-border);
       background: var(--parchment); color: var(--mahogany); font-weight: 800; font-size: 0.95rem;
       font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer; display: flex; align-items: center;
       justify-content: center; transition: all .12s; -webkit-tap-highlight-color: transparent;
     }
-    .qty-btn:hover  { background: #e4d0bf; }
+    .qty-btn:hover  { background: var(--sand-hover); }
     .qty-btn:active { transform: scale(0.88); }
     .order-item-qty   { font-size: 0.88rem; font-weight: 700; color: var(--roast); min-width: 22px; text-align: center; }
     .order-item-total { font-size: 0.84rem; font-weight: 600; color: var(--mahogany); min-width: 56px; text-align: right; font-variant-numeric: tabular-nums; }
@@ -209,11 +210,11 @@
       -webkit-tap-highlight-color: transparent; text-align: center; overflow: hidden;
       aspect-ratio: 4 / 3;
     }
-    .addon-pill:hover  { background: var(--parchment); border-color: #c7a27c; }
+    .addon-pill:hover  { background: var(--parchment); border-color: var(--clay); }
     .addon-pill:active { transform: scale(0.93); }
-    .addon-pill.active { background: #fdf5ec; border-color: #c7a27c; color: var(--roast); }
+    .addon-pill.active { background: var(--sand-alt); border-color: var(--clay); color: var(--roast); }
     .addon-pill-qty {
-      background: var(--grad-cta); color: #fff;
+      background: var(--grad-cta); color: var(--white);
       border-radius: var(--radius-md); padding: 1px 6px; font-size: 0.68rem; font-weight: 800;
     }
 
@@ -223,7 +224,7 @@
       display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px;
     }
     .addon-chip {
-      background: #fdf5ec; border: 1px solid #e0c9b8; color: var(--mahogany);
+      background: var(--sand-alt); border: 1px solid var(--sand-border); color: var(--mahogany);
       font-size: 0.66rem; font-weight: 700; padding: 1px 7px; border-radius: var(--radius-pill);
     }
     .order-item-addons.muted {
@@ -232,12 +233,12 @@
 
     /* ── Paid Online (GCash) toggle ── */
     .paid-online-btn {
-      background: var(--parchment); border: 1.5px solid #e0c9b8; border-radius: var(--radius-md);
+      background: var(--parchment); border: 1.5px solid var(--sand-border); border-radius: var(--radius-md);
       padding: 7px 12px; font-size: 0.78rem; font-weight: 700; color: var(--mahogany);
       cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; transition: all .15s;
       -webkit-tap-highlight-color: transparent; width: 100%;
     }
-    .paid-online-btn.active { background: #e6f0fa; border-color: #90b8e0; color: #2a5a9a; }
+    .paid-online-btn.active { background: var(--info-bg); border-color: var(--info-border); color: var(--info); }
     .paid-online-btn:active { transform: scale(0.98); }
     .paid-online-btn.small { width: auto; padding: 4px 10px; font-size: 0.7rem; }
     .void-order-btn {
@@ -250,7 +251,7 @@
 
     /* ── Auto-synced expense row (Paid Online / GCash) ── */
     .expense-row.auto-expense input {
-      background: #f0f5fb; color: #2a5a9a; font-weight: 700; pointer-events: none;
+      background: #f0f5fb; color: var(--info); font-weight: 700; pointer-events: none;
     }
     .expense-row.auto-expense .exp-auto-tag {
       font-size: 0.62rem; color: #5a86bd; font-weight: 700; white-space: nowrap; flex-shrink: 0;
@@ -259,20 +260,20 @@
     /* ── Change calculator ── */
     .change-row {
       display: flex; align-items: center; gap: 8px;
-      padding: 8px 14px; border-top: 1px solid #f0e4d8; background: var(--pearl);
+      padding: 8px 14px; border-top: 1px solid var(--sand); background: var(--pearl);
     }
     .change-label { font-size: 0.78rem; color: var(--mahogany); font-weight: 600; white-space: nowrap; }
     .change-input {
-      flex: 1; padding: 7px 10px; border: 1.5px solid #dfc9b4; border-radius: 9px;
-      font-size: 0.88rem; font-family: "Plus Jakarta Sans", sans-serif; background: #fff; color: var(--espresso);
+      flex: 1; padding: 7px 10px; border: 1.5px solid var(--sand-border); border-radius: 9px;
+      font-size: 0.88rem; font-family: "Plus Jakarta Sans", sans-serif; background: var(--white); color: var(--espresso);
       min-width: 0;
     }
-    .change-input:focus { outline: none; border-color: #c7a27c; }
+    .change-input:focus { outline: none; border-color: var(--clay); }
     .change-display {
       font-size: 0.88rem; font-weight: 700; color: var(--roast);
       min-width: 80px; text-align: right; font-variant-numeric: tabular-nums;
     }
-    .change-display.negative { color: #c0665a; }
+    .change-display.negative { color: var(--danger-soft); }
 
     /* ── Order footer ── */
     .order-footer { padding: 10px 14px 13px; border-top: 1.5px solid var(--latte); background: var(--pearl); }
@@ -280,7 +281,7 @@
     .place-order-btn {
       width: 100%; padding: 13px;
       background: var(--grad-cta);
-      color: #fff; border: none; border-radius: var(--radius-lg); font-size: 0.95rem;
+      color: var(--white); border: none; border-radius: var(--radius-lg); font-size: 0.95rem;
       font-weight: 700; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
       box-shadow: var(--shadow-btn); transition: all .18s;
     }
@@ -310,7 +311,7 @@
       display: flex; align-items: center; justify-content: space-between;
     }
     .orders-count-badge {
-      background: #f0e4d8; color: var(--mahogany); border-radius: var(--radius-pill);
+      background: var(--sand); color: var(--mahogany); border-radius: var(--radius-pill);
       padding: 2px 9px; font-size: 0.7rem; font-weight: 700; transition: transform .2s;
     }
     @keyframes pulseBadge { 0%{transform:scale(1)} 50%{transform:scale(1.28)} 100%{transform:scale(1)} }
@@ -329,7 +330,7 @@
     .order-log-total { font-size: 0.9rem; font-weight: 700; color: var(--roast); font-variant-numeric: tabular-nums; }
     .order-log-chevron { font-size: 0.6rem; color: var(--mochaccino); transition: transform .2s; display: inline-block; }
     .order-log-item.expanded .order-log-chevron { transform: rotate(180deg); }
-    .order-log-detail { border-top: 1px solid #f0e4d8; padding: 10px 14px; display: none; }
+    .order-log-detail { border-top: 1px solid var(--sand); padding: 10px 14px; display: none; }
     .order-log-item.expanded .order-log-detail { display: block; }
     .order-log-detail-row { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--mahogany); padding: 3px 0; }
     .order-log-detail-row.sub { color: var(--bark); font-size: 0.75rem; padding-left: 10px; }
@@ -374,7 +375,7 @@
     .modal-title { font-size: 1rem; font-weight: 700; color: var(--roast); }
     .modal-sub   { font-size: 0.75rem; color: var(--bark); margin-top: 2px; }
     .modal-cancel-btn {
-      background: #f0e4d8; border: 1.5px solid #e0c9b8; border-radius: 9px;
+      background: var(--sand); border: 1.5px solid var(--sand-border); border-radius: 9px;
       padding: 7px 13px; font-weight: 600; font-size: 0.82rem; color: var(--mahogany);
       cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; flex-shrink: 0;
     }
@@ -395,18 +396,18 @@
       display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
       overflow: hidden; word-break: break-word;
     }
-    .flavor-btn:hover  { background: var(--parchment); border-color: #c7a27c; }
+    .flavor-btn:hover  { background: var(--parchment); border-color: var(--clay); }
     .flavor-btn:active { transform: scale(0.93); }
     .flavor-btn.no-flavor {
-      background: #f0e4d8; color: var(--bark); font-style: italic;
+      background: var(--sand); color: var(--bark); font-style: italic;
       grid-column: 1 / -1; aspect-ratio: auto; padding: 10px;
     }
     .flavor-btn.selected {
-      background: #fdf0e0; border-color: #c7a27c; color: var(--roast);
+      background: #fdf0e0; border-color: var(--clay); color: var(--roast);
     }
     .flavor-count {
       display: inline-block; background: var(--grad-cta);
-      color: #fff; font-size: 0.65rem; font-weight: 800; font-style: normal;
+      color: var(--white); font-size: 0.65rem; font-weight: 800; font-style: normal;
       border-radius: var(--radius-md); padding: 1px 6px; margin-left: 4px; vertical-align: middle;
     }
     .flavor-search-wrap { padding: 8px 18px 0; flex-shrink: 0; }
@@ -415,7 +416,7 @@
       border-radius: var(--radius-md); padding: 9px 12px; font-size: 0.86rem; color: var(--roast);
       font-family: "Plus Jakarta Sans", sans-serif;
     }
-    .flavor-search-input:focus { outline: none; border-color: #c7a27c; }
+    .flavor-search-input:focus { outline: none; border-color: var(--clay); }
     .flavor-empty-msg { text-align: center; color: var(--dust); font-size: 0.82rem; padding: 24px 10px; grid-column: 1 / -1; }
     .flavor-modal-footer {
       flex-shrink: 0; padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
@@ -423,7 +424,7 @@
     }
     .flavor-modal-done-btn {
       display: block; width: 100%; padding: 13px; border: none; border-radius: var(--radius-lg);
-      background: var(--grad-cta); color: #fff; font-weight: 700; font-size: 0.92rem;
+      background: var(--grad-cta); color: var(--white); font-weight: 700; font-size: 0.92rem;
       font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer;
     }
     .flavor-modal-done-btn:active { transform: scale(0.97); }
@@ -442,11 +443,11 @@
     .receipt-row.flavor-sub { padding-left: 10px; color: var(--bark); font-size: 0.76rem; }
     .receipt-row.addon-row  { color: var(--mahogany); }
     .receipt-total-row { display: flex; justify-content: space-between; font-size: 1.05rem; font-weight: 800; color: var(--espresso); padding: 6px 0 2px; }
-    .receipt-progress { height: 3px; background: #f0e4d8; border-radius: 2px; margin: 12px 0 8px; overflow: hidden; }
-    .receipt-progress-bar { height: 100%; background: linear-gradient(90deg, #d4a97c, var(--mahogany)); border-radius: 2px; width: 100%; transition: width linear; }
+    .receipt-progress { height: 3px; background: var(--sand); border-radius: 2px; margin: 12px 0 8px; overflow: hidden; }
+    .receipt-progress-bar { height: 100%; background: linear-gradient(90deg, var(--clay-light), var(--mahogany)); border-radius: 2px; width: 100%; transition: width linear; }
     .modal-close-btn {
       width: 100%; padding: 12px; background: var(--grad-cta);
-      color: #fff; border: none; border-radius: var(--radius-lg); font-size: 0.9rem; font-weight: 700;
+      color: var(--white); border: none; border-radius: var(--radius-lg); font-size: 0.9rem; font-weight: 700;
       font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer; transition: all .18s;
     }
     .modal-close-btn:hover { background: var(--grad-cta); }
@@ -460,9 +461,9 @@
     .end-shift-row.bold { font-weight: 700; color: var(--roast); }
     .end-shift-actions { display: flex; gap: 10px; margin-top: 12px; }
     .end-shift-actions button { flex: 1; padding: 12px; border-radius: var(--radius-lg); font-weight: 700; font-size: 0.88rem; font-family: "Plus Jakarta Sans", sans-serif; cursor: pointer; border: none; transition: all .2s; }
-    .btn-cancel-shift  { background: #f0e4d8; color: var(--mahogany); border: 1.5px solid #e0c9b8 !important; }
-    .btn-cancel-shift:hover  { background: #e4d0bf; }
-    .btn-confirm-shift { background: var(--grad-cta); color: #fff; box-shadow: 0 3px 10px rgba(107,61,30,0.25); }
+    .btn-cancel-shift  { background: var(--sand); color: var(--mahogany); border: 1.5px solid var(--sand-border) !important; }
+    .btn-cancel-shift:hover  { background: var(--sand-hover); }
+    .btn-confirm-shift { background: var(--grad-cta); color: var(--white); box-shadow: 0 3px 10px rgba(107,61,30,0.25); }
     .btn-confirm-shift:hover { background: var(--grad-cta); transform: translateY(-1px); }
 
     @media (max-width: 380px) {
@@ -475,7 +476,7 @@
     /* ── Flavor out-of-stock toast ── */
     .flavor-toast {
       position: absolute; top: 12px; left: 50%; transform: translateX(-50%) translateY(-8px);
-      background: #c0665a; color: #fff; font-size: 0.8rem; font-weight: 700;
+      background: var(--danger-soft); color: var(--white); font-size: 0.8rem; font-weight: 700;
       padding: 8px 18px; border-radius: var(--radius-pill);
       box-shadow: 0 3px 14px rgba(192,102,90,0.4);
       opacity: 0; transition: opacity .2s, transform .2s;
@@ -492,12 +493,12 @@
 
     /* ── Done button on order log ── */
     .order-done-btn {
-      background: #f0e4d8; border: 1.5px solid #e0c9b8; border-radius: 8px;
+      background: var(--sand); border: 1.5px solid var(--sand-border); border-radius: 8px;
       padding: 4px 10px; font-size: 0.7rem; font-weight: 700; color: var(--mahogany);
       cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; transition: all .15s; flex-shrink: 0;
       -webkit-tap-highlight-color: transparent;
     }
-    .order-done-btn.done { background: #e6f5e6; border-color: #90c890; color: #2e7a2e; }
+    .order-done-btn.done { background: var(--success-bg-alt); border-color: #90c890; color: var(--success-dark); }
     .order-done-btn:active { transform: scale(0.9); }
     .order-log-item.order-done { opacity: 0.6; }
     .order-log-item.order-done .order-log-num { text-decoration: line-through; opacity: 0.7; }
@@ -510,7 +511,7 @@
       transition: all .16s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       text-align: center;
     }
-    .flavor-settings-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
+    .flavor-settings-btn:hover { background: rgba(255,255,255,0.22); color: var(--white); }
     .flavor-settings-btn:active { transform: scale(0.96); }
 
     .fsettings-cat { margin-bottom: 16px; }
@@ -522,18 +523,18 @@
     .fsettings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .fsettings-pill {
       display: flex; align-items: center; justify-content: space-between;
-      background: var(--parchment); border: 1.5px solid #e0c9b8; border-radius: var(--radius-md);
+      background: var(--parchment); border: 1.5px solid var(--sand-border); border-radius: var(--radius-md);
       padding: 8px 10px; font-size: 0.76rem; font-weight: 600; color: var(--roast);
       cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif; transition: all .14s; gap: 6px;
     }
     .fsettings-pill:active { transform: scale(0.95); }
     .fsettings-pill.oos {
-      background: #fff0f0; border-color: #f0c0c0; color: #b05050;
+      background: var(--danger-bg); border-color: #f0c0c0; color: #b05050;
       text-decoration: line-through; opacity: 0.75;
     }
     .fsettings-dot {
       width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-      background: #7ab87a; transition: background .14s;
+      background: var(--success-mid); transition: background .14s;
     }
     .fsettings-pill.oos .fsettings-dot { background: #e08080; }
     @media (max-width: 380px) { .fsettings-grid { grid-template-columns: repeat(2,1fr); } }
@@ -547,7 +548,7 @@
       justify-content: space-between; border-bottom: 1px solid var(--latte); cursor: pointer;
     }
     .pos-stock-title { font-size: 0.75rem; font-weight: 700; color: var(--bark); letter-spacing: 0.09em; text-transform: uppercase; }
-    .pos-stock-badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); background: #f0e4d8; color: var(--mahogany); margin-left: auto; margin-right: 8px; }
+    .pos-stock-badge { font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--sand); color: var(--mahogany); margin-left: auto; margin-right: 8px; }
     .pos-stock-toggle { font-size: 0.7rem; color: var(--dust); transition: transform .2s; }
     .pos-stock-toggle.open { transform: rotate(180deg); }
     .pos-stock-body { padding: 12px 14px 14px; display: none; }
@@ -558,21 +559,21 @@
     .stock-cell { display: flex; flex-direction: column; gap: 3px; }
     .stock-cell-label { font-size: 0.66rem; font-weight: 700; color: var(--bark); text-align: center; }
     .stock-cell-input {
-      padding: 8px 4px; border: 1.5px solid #dfc9b4; border-radius: 9px;
+      padding: 8px 4px; border: 1.5px solid var(--sand-border); border-radius: 9px;
       font-size: 0.9rem; font-family: "Plus Jakarta Sans", sans-serif; background: var(--pearl); color: var(--espresso);
       text-align: center; width: 100%; box-sizing: border-box;
     }
-    .stock-cell-input:focus { outline: none; border-color: #c7a27c; background: #fff; }
-    .stock-del-input { border-color: #b8ddb8 !important; background: #f0f7f0 !important; }
-    .stock-del-input:focus { border-color: #7ab87a !important; }
+    .stock-cell-input:focus { outline: none; border-color: var(--clay); background: var(--white); }
+    .stock-del-input { border-color: var(--success-border) !important; background: var(--success-bg) !important; }
+    .stock-del-input:focus { border-color: var(--success-mid) !important; }
     .stock-dmg-input { border-color: #f0c8b8 !important; background: #fdf4f2 !important; }
     .stock-dmg-input:focus { border-color: #e08060 !important; }
 
     /* ── Offline banner ── */
     .offline-banner {
       position: sticky; top: 0; z-index: 200;
-      background: linear-gradient(135deg, #8B2500, #C04020);
-      color: #fff; text-align: center; padding: 7px 16px;
+      background: linear-gradient(135deg, var(--danger-darkest), var(--danger-deep));
+      color: var(--white); text-align: center; padding: 7px 16px;
       font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em;
       display: none; align-items: center; justify-content: center; gap: 8px;
       box-shadow: 0 2px 8px rgba(180,60,0,0.35);
@@ -581,7 +582,7 @@
     .offline-banner .offline-retry {
       background: rgba(255,255,255,0.22); border: 1px solid rgba(255,255,255,0.4);
       border-radius: 6px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700;
-      color: #fff; cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif;
+      color: var(--white); cursor: pointer; font-family: "Plus Jakarta Sans", sans-serif;
     }
 
     /* ── Progress bar ── */
@@ -599,16 +600,16 @@
     }
     .quota-bar-fill {
       height: 100%; border-radius: 3px;
-      background: linear-gradient(90deg, #C4813A, #D4A55A);
+      background: linear-gradient(90deg, var(--caramel), var(--honey));
       transition: width .5s cubic-bezier(.4,0,.2,1), background .6s ease;
       min-width: 4px;
     }
-    .quota-bar-fill.near   { background: linear-gradient(90deg, #D4A55A, #E8C060); }
-    .quota-bar-fill.hit    { background: linear-gradient(90deg, #4a9e4a, #7ab87a); }
-    .quota-bar-fill.exceed { background: linear-gradient(90deg, #4a9e4a, #7ab87a); }
+    .quota-bar-fill.near   { background: linear-gradient(90deg, var(--honey), #E8C060); }
+    .quota-bar-fill.hit    { background: linear-gradient(90deg, var(--success-light), var(--success-mid)); }
+    .quota-bar-fill.exceed { background: linear-gradient(90deg, var(--success-light), var(--success-mid)); }
     /* Bonus mode: teal shimmer — replaces the bar after quota flash */
     .quota-bar-fill.bonus {
-      background: linear-gradient(90deg, #1a7a9a 0%, #30b8d4 40%, #60d8ee 60%, #1a7a9a 100%);
+      background: linear-gradient(90deg, var(--info-deep) 0%, #30b8d4 40%, #60d8ee 60%, var(--info-deep) 100%);
       background-size: 250% 100%;
       animation: bonusShimmer 2.2s ease-in-out infinite;
     }
@@ -643,7 +644,7 @@
     }
     .order-edit-btn:hover  { background: var(--latte); }
     .order-edit-btn:active { transform: scale(0.88); }
-    .order-edit-btn.remove { border-color: #f0c8c8; color: var(--danger); background: #fdf0f0; }
+    .order-edit-btn.remove { border-color: var(--danger-border); color: var(--danger); background: var(--danger-bg); }
     .order-edit-qty { font-size: 0.88rem; font-weight: 700; color: var(--roast); min-width: 22px; text-align: center; }
     .order-edit-total { font-size: 0.80rem; font-weight: 600; color: var(--mahogany); min-width: 56px; text-align: right; font-variant-numeric: tabular-nums; }
     .order-edit-header {
@@ -661,7 +662,7 @@
     /* ── Quota toast ── */
     .quota-toast {
       position: fixed; top: 76px; left: 50%; transform: translateX(-50%) translateY(-12px);
-      background: linear-gradient(135deg, #4a9e4a, #2e7a2e); color: #fff;
+      background: linear-gradient(135deg, var(--success-light), var(--success-dark)); color: var(--white);
       padding: 11px 22px; border-radius: var(--radius-lg); font-weight: 700; font-size: 0.88rem;
       box-shadow: 0 4px 22px rgba(46,122,46,0.38); z-index: 300; pointer-events: none;
       opacity: 0; transition: opacity .3s, transform .3s; white-space: nowrap; text-align: center;
@@ -729,7 +730,7 @@
       </div>
     </div>
     <button class="start-btn" onclick="startShift()">▶ &nbsp;Start Shift</button>
-    <div id="setupError" style="display:none;margin-top:12px;background:#fff0f0;border:1.5px solid #f0c8c8;border-radius:11px;padding:10px 14px;font-size:0.84rem;font-weight:600;color:#c0665a;text-align:center;"></div>
+    <div id="setupError" style="display:none;margin-top:12px;background:var(--danger-bg);border:1.5px solid var(--danger-border);border-radius:11px;padding:10px 14px;font-size:0.84rem;font-weight:600;color:var(--danger-soft);text-align:center;"></div>
   </div>
 </div>
 
@@ -845,14 +846,14 @@
         <span class="pos-stock-toggle" id="stockToggle">▼</span>
       </div>
       <div class="pos-stock-body" id="posStockBody">
-        <div class="stock-sub-label" style="color:#3a7a3a;">📦 Delivered Cups</div>
+        <div class="stock-sub-label" style="color:var(--success-dark);">📦 Delivered Cups</div>
         <div class="stock-grid">
           <div class="stock-cell"><div class="stock-cell-label">Medium</div>  <input class="stock-cell-input stock-del-input" type="number" id="sDelM"  min="0" placeholder="0" oninput="saveStockInputs()"></div>
           <div class="stock-cell"><div class="stock-cell-label">Large</div>   <input class="stock-cell-input stock-del-input" type="number" id="sDelL"  min="0" placeholder="0" oninput="saveStockInputs()"></div>
           <div class="stock-cell"><div class="stock-cell-label">Small</div>   <input class="stock-cell-input stock-del-input" type="number" id="sDelS"  min="0" placeholder="0" oninput="saveStockInputs()"></div>
           <div class="stock-cell"><div class="stock-cell-label">Hot ☕</div>   <input class="stock-cell-input stock-del-input" type="number" id="sDelHC" min="0" placeholder="0" oninput="saveStockInputs()"></div>
         </div>
-        <div class="stock-sub-label" style="color:#c0665a;">💔 Damaged Cups</div>
+        <div class="stock-sub-label" style="color:var(--danger-soft);">💔 Damaged Cups</div>
         <div class="stock-grid">
           <div class="stock-cell"><div class="stock-cell-label">Medium</div>  <input class="stock-cell-input stock-dmg-input" type="number" id="sDmgM"  min="0" placeholder="0" oninput="saveStockInputs()"></div>
           <div class="stock-cell"><div class="stock-cell-label">Large</div>   <input class="stock-cell-input stock-dmg-input" type="number" id="sDmgL"  min="0" placeholder="0" oninput="saveStockInputs()"></div>
@@ -955,20 +956,7 @@
 </div>
 
 <!-- ═══════════ BOTTOM NAV ═══════════ -->
-<nav class="bottom-nav">
-  <a href="calculate.html" class="bottom-nav-item">
-    <span class="bottom-nav-icon">🧮</span>
-    <span class="bottom-nav-label">Calculate</span>
-  </a>
-  <span class="bottom-nav-item bottom-nav-shift active">
-    <span class="bottom-nav-shift-pill">🧋</span>
-    <span class="bottom-nav-label">Shift</span>
-  </span>
-  <a href="calendar.html" class="bottom-nav-item">
-    <span class="bottom-nav-icon">📅</span>
-    <span class="bottom-nav-label">History</span>
-  </a>
-</nav>
+<script>document.write(renderBottomNav("shift", { shiftIsCurrentPage: true }));</script>
 
 <!-- ═══════════ FLAVOR SETTINGS MODAL ═══════════ -->
 <div class="modal-overlay centered" id="flavorSettingsModal" onclick="handleFlavorSettingsOverlay(event)">
@@ -1933,7 +1921,7 @@ function renderOrdersLog() {
       <div style="display:flex;align-items:center;gap:8px;padding:8px 14px 2px;border-top:1px dashed rgba(226,201,168,0.5);margin-top:4px;">
         <span style="font-size:0.75rem;color:var(--mahogany);font-weight:700;white-space:nowrap;flex-shrink:0;">Given</span>
         <input type="number" id="given-input-${order.id}"
-          style="flex:1;min-width:0;padding:5px 9px;border:1.5px solid #dfc9b4;border-radius:8px;
+          style="flex:1;min-width:0;padding:5px 9px;border:1.5px solid var(--sand-border);border-radius:8px;
                  font-size:0.84rem;font-family:'Plus Jakarta Sans',sans-serif;
                  background:var(--pearl);color:var(--espresso);"
           value="${order.given || ''}" placeholder="₱0"
@@ -1942,7 +1930,7 @@ function renderOrdersLog() {
         <span id="given-change-${order.id}"
           style="font-size:0.82rem;font-weight:700;min-width:82px;text-align:right;
                  font-variant-numeric:tabular-nums;flex-shrink:0;
-                 color:${order.given > 0 ? (order.given >= order.total ? '#2e7a2e' : '#c0665a') : 'var(--bark)'};">
+                 color:${order.given > 0 ? (order.given >= order.total ? 'var(--success-dark)' : 'var(--danger-soft)') : 'var(--bark)'};">
           ${order.given > 0
             ? (order.given >= order.total
                 ? `Change: ${fmt(order.given - order.total)}`
@@ -1966,7 +1954,7 @@ function renderOrdersLog() {
           <span class="order-log-desc">${desc}</span>
         </div>
         <div class="order-log-right">
-          ${order.paidOnline ? `<span style="font-size:0.62rem;font-weight:700;color:#2a5a9a;background:#e6f0fa;border:1px solid #90b8e0;border-radius:6px;padding:2px 6px;flex-shrink:0;">GCash</span>` : ""}
+          ${order.paidOnline ? `<span style="font-size:0.62rem;font-weight:700;color:var(--info);background:var(--info-bg);border:1px solid var(--info-border);border-radius:6px;padding:2px 6px;flex-shrink:0;">GCash</span>` : ""}
           <button class="order-done-btn${order.done?" done":""}"
             onclick="event.stopPropagation();toggleOrderDone(${order.id})">${doneLabel}</button>
           <span class="order-log-total">${fmt(order.total)}</span>
@@ -2039,7 +2027,7 @@ function updateOrderGiven(orderId, value) {
   if (g > 0) {
     const ch = g - t;
     disp.textContent = ch >= 0 ? `Change: ${fmt(ch)}` : `Short: ${fmt(-ch)}`;
-    disp.style.color  = ch >= 0 ? '#2e7a2e' : '#c0665a';
+    disp.style.color  = ch >= 0 ? 'var(--success-dark)' : 'var(--danger-soft)';
   } else {
     disp.textContent = 'Change: —';
     disp.style.color  = 'var(--bark)';
@@ -2203,14 +2191,14 @@ function showReceipt(order) {
   if (order.paidOnline) {
     paymentHTML += `
       <hr class="modal-divider">
-      <div class="receipt-row" style="font-weight:700;color:#2a5a9a"><span>📱 Paid via GCash</span><span></span></div>`;
+      <div class="receipt-row" style="font-weight:700;color:var(--info)"><span>📱 Paid via GCash</span><span></span></div>`;
   }
   if (order.given > 0) {
     const change = order.given - order.total;
     paymentHTML = `
       <hr class="modal-divider">
       <div class="receipt-row" style="color:var(--bark)"><span>Given</span><span>${fmt(order.given)}</span></div>
-      <div class="receipt-row" style="font-weight:700;color:${change>=0?"#2e7a2e":"#c0665a"}">
+      <div class="receipt-row" style="font-weight:700;color:${change>=0?"var(--success-dark)":"var(--danger-soft)"}">
         <span>${change>=0?"Change":"Short"}</span><span>${fmt(Math.abs(change))}</span>
       </div>`;
   }
@@ -2253,21 +2241,21 @@ function openEndShift() {
   const endL  = state.begL  + (del.L||0)  - (dmg.L||0)  - t.L  - t.LC  - t.FTL;
   const endS  = state.begS  + (del.S||0)  - (dmg.S||0)  - t.S;
   const endHC = state.begHC + (del.HC||0) - (dmg.HC||0) - t.HC;
-  const warn  = v => v<0 ? `<span style="color:#c0665a;font-weight:700">${v} ⚠</span>` : v;
+  const warn  = v => v<0 ? `<span style="color:var(--danger-soft);font-weight:700">${v} ⚠</span>` : v;
   const addonRev = computeAddonRevenue();
   const cupSales = computeShiftCupTotal();
   const expTotal = state.expenses.reduce((s,e)=>s+e.price,0);
   const gcashTotal = state.orders.filter(o=>o.paidOnline).reduce((s,o)=>s+o.total,0);
   const totalDel = (del.M||0)+(del.L||0)+(del.S||0)+(del.HC||0);
   const totalDmg = (dmg.M||0)+(dmg.L||0)+(dmg.S||0)+(dmg.HC||0);
-  const delRow = totalDel>0 ? `<div class="end-shift-row" style="color:#3a7a3a;"><span>📦 Delivered</span><span>M+${del.M||0} L+${del.L||0} S+${del.S||0} HC+${del.HC||0}</span></div>` : "";
-  const dmgRow = totalDmg>0 ? `<div class="end-shift-row" style="color:#c0665a;"><span>💔 Damaged</span><span>M−${dmg.M||0} L−${dmg.L||0} S−${dmg.S||0} HC−${dmg.HC||0}</span></div>` : "";
+  const delRow = totalDel>0 ? `<div class="end-shift-row" style="color:var(--success-dark);"><span>📦 Delivered</span><span>M+${del.M||0} L+${del.L||0} S+${del.S||0} HC+${del.HC||0}</span></div>` : "";
+  const dmgRow = totalDmg>0 ? `<div class="end-shift-row" style="color:var(--danger-soft);"><span>💔 Damaged</span><span>M−${dmg.M||0} L−${dmg.L||0} S−${dmg.S||0} HC−${dmg.HC||0}</span></div>` : "";
   document.getElementById("endShiftSummary").innerHTML=`
     <div class="end-shift-row bold"><span>Orders Placed</span><span>${state.orders.length}</span></div>
     <div class="end-shift-row bold"><span>Cup Sales</span><span>${fmt(cupSales)}</span></div>
     ${addonRev?`<div class="end-shift-row"><span>Add-on Revenue</span><span>+ ${fmt(addonRev)}</span></div>`:""}
     <div class="end-shift-row" style="font-weight:700;border-top:1.5px solid var(--mochaccino);padding-top:8px;margin-top:4px;"><span>Total Revenue</span><span>${fmt(state.shiftTotal)}</span></div>
-    ${gcashTotal?`<div class="end-shift-row" style="color:#2a5a9a;"><span>📱 Paid Online (GCash)</span><span>${fmt(gcashTotal)}</span></div>`:""}
+    ${gcashTotal?`<div class="end-shift-row" style="color:var(--info);"><span>📱 Paid Online (GCash)</span><span>${fmt(gcashTotal)}</span></div>`:""}
     ${expTotal?`<div class="end-shift-row"><span>Expenses (incl. GCash)</span><span>− ${fmt(expTotal)}</span></div>`:""}
     <div class="end-shift-row section-head"><span>Cup Counts → Auto-filled</span><span></span></div>
     ${delRow}${dmgRow}
@@ -2527,7 +2515,7 @@ function posUseYesterdaysEnding() {
       if (!el) return;
       el.value = val ?? "";
       el.style.transition = "background .4s";
-      el.style.background = "#e6f5e6";
+      el.style.background = "var(--success-bg-alt)";
       setTimeout(() => el.style.background = "", 900);
     });
   } catch {}
