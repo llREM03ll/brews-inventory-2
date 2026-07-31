@@ -370,12 +370,6 @@
     function closeSettings() { document.getElementById("settingsModal").classList.remove("open"); }
     function handleSettingsOverlay(e) { if (e.target === document.getElementById("settingsModal")) closeSettings(); }
 
-    // Deep link from another page's Settings icon (see header.js: goToSettings())
-    if (new URLSearchParams(location.search).get("settings") === "1") {
-      openSettings();
-      history.replaceState(null, "", location.pathname);
-    }
-
     function confirmResetSettings() {
       if (getDeviceRole() !== "manager") return;
       if (!confirm("Reset all settings to defaults? This cannot be undone.")) return;
@@ -672,6 +666,16 @@
     function clearThemeBg() {
       window.BrewsTheme.clearBackground();
       updateThemeBgUI();
+    }
+  </script>
+
+  <script>
+    // Deep link from another page's Settings icon (see header.js: goToSettings()).
+    // Runs in its own script tag, after the block above has fully initialized
+    // (THEME_SWATCHES etc.), so openSettings() has everything it needs.
+    if (new URLSearchParams(location.search).get("settings") === "1") {
+      openSettings();
+      history.replaceState(null, "", location.pathname);
     }
   </script>
 
